@@ -30,6 +30,8 @@
 #
 function PerformUpdate
 {
+echo "Function: PerformUpdate"
+
 sudo apt-get -y update
 }
 # -------------------------------------------------------------------
@@ -38,6 +40,8 @@ sudo apt-get -y update
 #
 function PerformUpgrade
 {
+echo "Function: PerformUpgrade"
+
 sudo apt-get -y upgrade
 sudo apt-get -y dist-upgrade
 }
@@ -47,6 +51,8 @@ sudo apt-get -y dist-upgrade
 #
 function InstallDevelopmentTools
 {
+echo "Function: InstallDevelopmentTools"
+
 sudo apt install -y gcc build-essential
 sudo apt install -y git subversion
 sudo apt install -y gitk
@@ -64,6 +70,7 @@ sudo apt install -y ddd
 #
 function InstallAudioApplications
 {
+echo "Function: InstallAudioApplications"
 
 sudo apt install -y brasero
 
@@ -76,6 +83,8 @@ sudo apt install -y brasero
 #
 function InstallMusicApplications
 {
+echo "Function: InstallMusicApplications"
+
 sudo apt install -y qjackctl
 sudo apt install -y tuxguitar
 sudo apt install -y audacity
@@ -90,7 +99,7 @@ sudo apt install -y lmms
 #
 function SetUserPreferences
 {
-
+echo "Function: SetUserPreferences"
 # git config --global user.name "Steven Gomez"
 # git config --global user.email steve_gomez@usa.net
 }
@@ -100,6 +109,7 @@ function SetUserPreferences
 #
 function Function_001
 {
+echo "Function: Function_001"
 
 }
 # -------------------------------------------------------------------
@@ -109,6 +119,7 @@ function Function_001
 #
 function Function_002
 {
+echo "Function: Function_002"
 
 }
 # -------------------------------------------------------------------
@@ -118,6 +129,7 @@ function Function_002
 #
 function Function_003
 {
+echo "Function: Function_003"
 
 }
 # -------------------------------------------------------------------
@@ -127,26 +139,39 @@ function Function_003
 #
 function Function_004
 {
+echo "Function: Function_0024
 
 }
 # -------------------------------------------------------------------
 
 
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+#
+# Script execution starts below
+#
+#
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+echo "Starting script execution"
+uname -a
 
-function PerformUpdate
-function InstallDevelopmentTools
-function InstallAudioApplications
-function InstallMusicApplications
-function SetUserPreferences
+# function PerformUpdate
 
-function Function_001
-function Function_002
-function Function_003
-function Function_004
+# function InstallDevelopmentTools
+# function InstallAudioApplications
+# function InstallMusicApplications
+# function SetUserPreferences
 
+# function Function_001
+# function Function_002
+# function Function_003
+# function Function_004
 
+# function PerformUpgrade
 
-function PerformUpgrade
+echo "Script execution complete"
 
 
