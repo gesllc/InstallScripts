@@ -139,7 +139,7 @@ echo "Function: Function_003"
 #
 function Function_004
 {
-echo "Function: Function_0024
+echo "Function: Function_004"
 
 }
 # -------------------------------------------------------------------
