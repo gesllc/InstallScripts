@@ -158,20 +158,19 @@ echo "Function: Function_004"
 echo "Starting script execution"
 uname -a
 
-# function PerformUpdate
+# PerformUpdate
 
-# function InstallDevelopmentTools
-# function InstallAudioApplications
-# function InstallMusicApplications
-# function SetUserPreferences
+# InstallDevelopmentTools
+# InstallAudioApplications
+# InstallMusicApplications
+# SetUserPreferences
 
-# function Function_001
-# function Function_002
-# function Function_003
-# function Function_004
+# Function_001
+# Function_002
+# Function_003
+# Function_004
 
-# function PerformUpgrade
+# PerformUpgrade
 
 echo "Script execution complete"
-
 
