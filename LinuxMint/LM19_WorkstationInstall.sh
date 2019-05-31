@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #####################################################################
 #####################################################################
@@ -134,19 +134,19 @@ function Function_004
 
 
 
-function PerformUpdate
-function InstallDevelopmentTools
-function InstallAudioApplications
-function InstallMusicApplications
-function SetUserPreferences
+#function PerformUpdate
+#function InstallDevelopmentTools
+#function InstallAudioApplications
+#function InstallMusicApplications
+#function SetUserPreferences
 
-function Function_001
-function Function_002
-function Function_003
+#function Function_001
+#function Function_002
+#function Function_003
 function Function_004
 
 
 
-function PerformUpgrade
+#function PerformUpgrade
 
 
