@@ -146,12 +146,12 @@ echo "Function: FetchAndPrepareSlickEdit"
 
 if [ ! -d "/opt/slickedit-pro2018" ]; then
     echo "Downloading & extracting SlickEdit package"
-    wget ${SLICKEDIT_INSTALLER} --directory-prefix /opt
-    wget ${SLICKEDIT_KEY} --directory-prefix /opt
+    sudo wget ${SLICKEDIT_INSTALLER} --directory-prefix /opt
+    sudo wget ${SLICKEDIT_KEY} --directory-prefix /opt
     cd /opt
-    tar -xvf ${SE_TAR}
+    sudo tar -xvf ${SE_TAR}
 
-    rm ${SE_TAR}
+    sudo rm ${SE_TAR}
     cd
 
 else
@@ -162,16 +162,6 @@ fi
 # sudo ./vsinst
 # /opt/slickedit-pro2018/bin/vs &
 # sudo mv SE_VLX818071_2300_Gomez.lic /opt/slickedit-pro2018/bin/slickedit.lic
-
-}
-# -------------------------------------------------------------------
-
-
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#
-function Function_002
-{
-echo "Function: Function_002"
 
 }
 # -------------------------------------------------------------------
