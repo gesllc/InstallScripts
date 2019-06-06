@@ -15,16 +15,29 @@
 #####################################################################
 #####################################################################
 
+# APPLICATION_SERVER_URL=http://10.17.20.62/Applications
+APPLICATION_SERVER_URL=http://10.1.1.26/Applications
 
-# sudo mv SE_VLX818071_2300_Gomez.lic /opt/slickedit-pro2018/bin/slickedit.lic
-# tar xvf se_23000102_linux64.tar.gz 
-# cd se_23000102_linux64/
-# sudo ./vsinst
-# /opt/slickedit-pro2018/bin/vs &
+# List of things that are downloaded from internal server
+# PY34_SOURCE=${APPLICATION_SERVER_URL}/Python/3.4.4/Python-3.4.4.tgz
+
+SE_TAR=se_23000102_linux64.tar.gz
+SE_KEY=SE_VLX818071_2300_Gomez.lic
+SLICKEDIT_INSTALLER=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
+SLICKEDIT_KEY=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_KEY}
+
+VMRC=VMware-Remote-Console-10.0.4-11818843.x86_64.bundle
+VMRC_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMRC}
+
+VMPLAYER=VMware-Player-15.1.0-13591040.x86_64.bundle
+VMPLAYER_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMRC}
+
+MYSQL_WB=mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb
+MYSQL_WB_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${MYSQL_WB}
+
 # chmod +x VMware-Player-15.1.0-13591040.x86_64.bundle 
 # ./VMware-Player-15.1.0-13591040.x86_64.bundle 
-# sudo apt install libcurl3
-# sudo dpkg -i mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb 
+
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
@@ -59,12 +72,29 @@ sudo apt install -y gitk
 sudo apt install -y git-gui
 sudo apt install -y htop
 sudo apt install -y ddd
+sudo apt install -y filezilla
+
 
 # curl https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit
 
 }
 # -------------------------------------------------------------------
 
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+function FetchDatabaseTools
+{
+echo "Function: FetchDatabaseTools"
+
+sudo apt install -y sqlitebrowser
+
+# sudo apt install libcurl3
+# sudo dpkg -i mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb 
+
+    wget ${MYSQL_WB_INSTALLER} --directory-prefix ~/Downloads
+
+}
+# -------------------------------------------------------------------
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
@@ -73,6 +103,9 @@ function InstallAudioApplications
 echo "Function: InstallAudioApplications"
 
 sudo apt install -y brasero
+sudo apt install -y sound-juicer
+sudo apt install -y lame
+sudo apt install -y easytag
 
 }
 # -------------------------------------------------------------------
@@ -97,9 +130,9 @@ sudo apt install -y lmms
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
-function SetUserPreferences
+function SetGitUserPreferences
 {
-echo "Function: SetUserPreferences"
+echo "Function: SetGitUserPreferences"
 # git config --global user.name "Steven Gomez"
 # git config --global user.email steve_gomez@usa.net
 }
@@ -107,9 +140,28 @@ echo "Function: SetUserPreferences"
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
-function Function_001
+function FetchAndPrepareSlickEdit
 {
-echo "Function: Function_001"
+echo "Function: FetchAndPrepareSlickEdit"
+
+if [ ! -d "/opt/slickedit-pro2018" ]; then
+    echo "Downloading & extracting SlickEdit package"
+    wget ${SLICKEDIT_INSTALLER} --directory-prefix /opt
+    wget ${SLICKEDIT_KEY} --directory-prefix /opt
+    cd /opt
+    tar -xvf ${SE_TAR}
+
+    rm ${SE_TAR}
+    cd
+
+else
+    echo "SlickEdit directory appears to have previously been created (skipping)"
+fi
+
+# cd se_23000102_linux64/
+# sudo ./vsinst
+# /opt/slickedit-pro2018/bin/vs &
+# sudo mv SE_VLX818071_2300_Gomez.lic /opt/slickedit-pro2018/bin/slickedit.lic
 
 }
 # -------------------------------------------------------------------
@@ -158,19 +210,19 @@ echo "Function: Function_004"
 echo "Starting script execution"
 uname -a
 
-# PerformUpdate
+PerformUpdate
 
-# InstallDevelopmentTools
-# InstallAudioApplications
-# InstallMusicApplications
-# SetUserPreferences
+InstallDevelopmentTools
+InstallAudioApplications
+InstallMusicApplications
+SetGitUserPreferences
 
-# Function_001
-# Function_002
-# Function_003
-# Function_004
+FetchAndPrepareSlickEdit
+FetchDatabaseTools
+Function_003
+Function_004
 
-# PerformUpgrade
+PerformUpgrade
 
 echo "Script execution complete"
 
