@@ -88,8 +88,11 @@ echo "Function: FetchDatabaseTools"
 
 sudo apt install -y sqlitebrowser
 
-# sudo apt install libcurl3
-# sudo dpkg -i mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb 
+sudo apt install libcurl3
+
+# libcurl3 seemed to install OK, however the following still reports
+# dependency problems :(
+# sudo dpkg --install mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb 
 
     wget ${MYSQL_WB_INSTALLER} --directory-prefix ~/Downloads
 
