@@ -1,19 +1,32 @@
 #!/bin/sh
 
 yum -y install subversion
+yum -y install git
 yum -y update
 yum -y install wget
 yum -y install epel-release
 
 # Install and setup Apache
-yum -y install httpd
-systemctl start httpd.service
-systemctl enable httpd.service
+yum -y install httpd openssl mod-ssl
+
+systemctl restart httpd
+systemctl status httpd
+systemctl enable httpd
 
 # Install and setup MariaDB
-yum -y install mariadb-server mariadb
-systemctl start mariadb
-systemctl enable mariadb.service
+yum -y install mariadb mariadb-server
+
+systemctl restart mariadb
+systemctl status mariadb
+systemctl enable mariadb
+
+# Install PHP 
+wget -q http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum-config-manager --enable remi-php72
+
+yum install php php-mysql phpmyadmin
+
+exit()
 
 # Install and setup PHP
 # yum search php-   for more package options
@@ -23,7 +36,7 @@ yum -y install php php-mysql phpmyadmin
 # to refer to your home connection's IP address.
 
 # Restart Apache to synchronize with PHP
-systemctl restart httpd.service
+systemctl restart httpd
 
 # Should now be able to access phpMyAdmin using:
 # http://server_domain_or_IP/phpMyAdmin
