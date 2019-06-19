@@ -6,67 +6,132 @@
 # 
 # 
 
-yum -y install subversion
-yum -y install git
-yum -y update
-yum -y install wget
-yum -y install nano
+##########################################################################
+#
+function InstallBasicPackages
+{
+    echo "Function: InstallBasicPackages starting"
 
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
-yum -y install epel-release
+    yum -y install subversion
+    yum -y install git
+    yum -y update
+    yum -y install wget
+    yum -y install nano
 
-# Install and setup MariaDB
-yum -y install mariadb mariadb-server
+    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
+    yum -y install epel-release
 
-systemctl start mariadb
-systemctl enable mariadb
+    echo "Function: InstallBasicPackages complete"
+}
+# ------------------------------------------------------------------------
 
-# NOTE - Must run mysql_secure_installation
-#        to set MySQL root password, etc.
-
+##########################################################################
 # Install and setup Apache
-yum -y install httpd openssl mod-ssl
+#
+function InstallApache
+{
+    echo "Function: InstallApache starting"
 
-systemctl start httpd
-systemctl enable httpd
+    yum -y install httpd openssl mod-ssl
 
-# Open firewall for http and https
-sudo firewall-cmd --permanent --zone=public --add-service=http
-sudo firewall-cmd --permanent --zone=public --add-service=https
-sudo firewall-cmd --reload
+    systemctl start httpd
+    systemctl enable httpd
 
+    # Open firewall for http and https
+    sudo firewall-cmd --permanent --zone=public --add-service=http
+    sudo firewall-cmd --permanent --zone=public --add-service=https
+    sudo firewall-cmd --reload
+
+    echo "<h1>Hello Internet World!!</h1>" >> /var/www/html/index.html
+
+    echo "Function: InstallApache complete"
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
+# Install and setup MariaDB
+#
+function InstallDataBase
+{
+    echo "Function: InstallDataBase starting"
+
+    yum -y install mariadb mariadb-server
+
+    systemctl start mariadb
+    systemctl enable mariadb
+
+    # NOTE - Must run mysql_secure_installation
+    #        to set MySQL root password, etc.
+
+    echo "Function: InstallDataBase complete"
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
 # Install PHP 
+#
+function InstallPhp
+{
+    echo "Function: InstallPhp starting"
 
-# Add the Remi CentOS repository
-rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    # Add the Remi CentOS repository
+    rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    # Install yum-utils because the yum-config-manager is needed
+    yum -y install yum-utils
 
-# Install yum-utils because the yum-config-manager is needed
-yum -y install yum-utils
+    # Now install PHP 7.3
+    yum-config-manager --enable remi-php73
+    yum -y install php php-opcache
 
-# Now install PHP 7.3
-yum-config-manager --enable remi-php73
-yum -y install php php-opcache
+    # And restart Apache to apply the changes
+    systemctl restart httpd
 
-# And restart Apache to apply the changes
-systemctl restart httpd
+    # Create dummy php test page
+    echo "<?php phpinfo(); ?>" >> /var/www/html/info.php
 
-# Create dummy php test page
-echo "<?php phpinfo(); ?>" >> /var/www/html/info.php
+    # Add other PHP modules as needed (desired?) - yum search php
+    yum -y install php-mysqlnd php-pdo
 
-# Add other PHP modules as needed (desired?) - yum search php
-yum -y install php-mysqlnd php-pdo
+    # This group supports Wordpress, Joomla & Drupal
+    yum -y install php-gd php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-soap curl curl-devel
 
-# This group supports Wordpress, Joomla & Drupal
-yum -y install php-gd php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-soap curl curl-devel
+    # And restart Apache to apply changes from installing additional modules
+    systemctl restart httpd
 
-# And restart Apache to apply changes from installing additional modules
-systemctl restart httpd
+    echo "Function: InstallPhp complete"
+}
+# ------------------------------------------------------------------------
 
+##########################################################################
 # Install phpMyAdmin - See associated markdown document for setup informaiton
 # Should be able to access phpMyAdmin using http://<server>/phpMyAdmin
 # (After access permissions are set)
-yum -y install phpMyAdmin
-systemctl restart httpd
+#
+function InstallPhpMyAdmin
+{
+    echo "Function: InstallPhpMyAdmin starting"
+
+    yum -y install phpMyAdmin
+    systemctl restart httpd
+
+    echo "Function: InstallPhpMyAdmin complete"
+}
+# ------------------------------------------------------------------------
+
+
+# ====================================================================================
+# ====================================================================================
+# ====================================================================================
+#
+# Script execution begins here
+#
+# ====================================================================================
+
+InstallBasicPackages
+InstallDataBase
+InstallApache
+InstallPhp
+InstallPhpMyAdmin
 
 # The following is still a work in progress....
 
@@ -93,5 +158,4 @@ systemctl restart httpd
 ##
 ## Also set up Web Server Authentication Gate and .htaccess file per:
 ## https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-apache-on-a-centos-7-server
-
 
