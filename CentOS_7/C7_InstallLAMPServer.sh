@@ -4,21 +4,32 @@ yum -y install subversion
 yum -y install git
 yum -y update
 yum -y install wget
+yum -y install nano
+
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
 yum -y install epel-release
-
-# Install and setup Apache
-yum -y install httpd openssl mod-ssl
-
-systemctl restart httpd
-systemctl status httpd
-systemctl enable httpd
 
 # Install and setup MariaDB
 yum -y install mariadb mariadb-server
 
-systemctl restart mariadb
-systemctl status mariadb
+systemctl start mariadb
 systemctl enable mariadb
+
+# NOTE - Must run mysql_secure_installation
+#        to set MySQL root password, etc.
+
+# Install and setup Apache
+yum -y install httpd openssl mod-ssl
+
+systemctl start httpd
+systemctl enable httpd
+
+# Open firewall for http and https
+sudo firewall-cmd --permanent --zone=public --add-service=http
+sudo firewall-cmd --permanent --zone=public --add-service=https
+sudo firewall-cmd --reload
+
+exit()
 
 # Install PHP 
 wget -q http://rpms.remirepo.net/enterprise/remi-release-7.rpm
@@ -26,7 +37,6 @@ yum-config-manager --enable remi-php72
 
 yum install php php-mysql phpmyadmin
 
-exit()
 
 # Install and setup PHP
 # yum search php-   for more package options
@@ -43,11 +53,6 @@ systemctl restart httpd
 
 # Create dummy php test page
 echo "<?php phpinfo(); ?>" >> /var/www/html/info.php
-
-# Open firewall for http and https
-sudo firewall-cmd --permanent --zone=public --add-service=http
-sudo firewall-cmd --permanent --zone=public --add-service=https
-sudo firewall-cmd --reload
 
 # Create user that will have permission to upload site content
 # NOTE, the following will give a (desired) warning about the directory
