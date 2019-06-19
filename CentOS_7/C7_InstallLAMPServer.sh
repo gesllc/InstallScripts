@@ -26,6 +26,68 @@ function InstallBasicPackages
 # ------------------------------------------------------------------------
 
 ##########################################################################
+#
+function ServerSetup
+{
+    echo "Function: ServerSetup starting"
+
+    adduser webadmin
+    gpasswd -a webadmin wheel
+
+    # NOTE: The following command will list additional service names
+    #firewall-cmd --get-services
+
+    firewall-cmd --permanent --zone=public --add-service=ssh
+
+    # List all firewall settings
+    firewall-cmd --permanent --list-all
+
+    # Reload firewall, and make active on reboots
+    firewall-cmd --reload
+    systemctl enable firewalld
+
+    echo "Function: ServerSetup complete"
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
+#
+function AddLocalHostNames
+{
+    echo "Function: AddLocalHostnames starting"
+
+    if grep -q usstlweb01 /etc/hosts; then
+        echo "usstlweb01 entry already exists in /etc/hosts (skipping)"
+    else
+        echo "Adding usstlweb01 to /etc/hosts (Subversion server)"
+        echo '10.17.20.60   usstlweb01  usstlweb01.us.noam.biomerieux.net    # Prototype Web Server' >> /etc/hosts
+    fi
+
+    if grep -q usstlweb02 /etc/hosts; then
+        echo "usstlweb02 entry already exists in /etc/hosts (skipping)"
+    else
+        echo "Adding usstlweb02 to /etc/hosts (Subversion server)"
+        echo '10.17.20.62   usstlweb02  usstlweb02.us.noam.biomerieux.net    # Engineering Web Server' >> /etc/hosts
+    fi
+
+    echo "Function: AddLocalHostnames complete"
+}
+# ------------------------------------------------------------------------
+
+
+##########################################################################
+#
+function InstallEncryptClient
+{
+    echo "Function: InstallEncryptClient starting"
+
+    yum -y install certbot python2-certbot-apache mod_ssl
+
+    echo "Function: InstallEncryptClient complete"
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
 # Install and setup Apache
 #
 function InstallApache
@@ -38,9 +100,9 @@ function InstallApache
     systemctl enable httpd
 
     # Open firewall for http and https
-    sudo firewall-cmd --permanent --zone=public --add-service=http
-    sudo firewall-cmd --permanent --zone=public --add-service=https
-    sudo firewall-cmd --reload
+    firewall-cmd --permanent --zone=public --add-service=http
+    firewall-cmd --permanent --zone=public --add-service=https
+    firewall-cmd --reload
 
     echo "<h1>Hello Internet World!!</h1>" >> /var/www/html/index.html
 
@@ -128,6 +190,9 @@ function InstallPhpMyAdmin
 # ====================================================================================
 
 InstallBasicPackages
+ServerSetup
+AddLocalHostNames
+InstallEncryptClient
 InstallDataBase
 InstallApache
 InstallPhp

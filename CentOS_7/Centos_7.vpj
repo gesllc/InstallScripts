@@ -68,7 +68,9 @@
         <Folder
             Name="Resource Files"
             Filters="*.ico;*.cur;*.dlg"
-            GUID="{A9AFF234-C301-47F0-973E-1E7BDA5CD284}"/>
+            GUID="{A9AFF234-C301-47F0-973E-1E7BDA5CD284}">
+            <F N="C7_LAMPServer.md"/>
+        </Folder>
         <Folder
             Name="Bitmaps"
             Filters="*.bmp"

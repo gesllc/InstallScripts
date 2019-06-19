@@ -10,6 +10,19 @@ WARNING - The script creates the file /var/www/html/info.php.
 NOTE that this file is intended only to test that PHP is running,
      and should be deleted.  DO NOT go live with this file in place.
 
+Post Install Configuration Steps For Apache
+-------------------------------------------
+https://www.digitalocean.com/community/tutorials/initial-server-setup-with-centos-7
+
+Set password for webadmin user
+
+
+Configuration Steps For Certbot
+-------------------------------------------
+https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-centos-7
+
+Post Install Configuration Steps For PHP
+----------------------------------------
 Edits recommended for /etc/httpd/conf.d/phpMyAdmin.conf
 -------------------------------------------------------
 
