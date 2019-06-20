@@ -83,6 +83,11 @@ function InstallEncryptClient
 
     yum -y install certbot python2-certbot-apache mod_ssl
 
+    # Stop the Apache server before getting the certificate
+    systemctl stop httpd
+
+
+
     echo "Function: InstallEncryptClient complete"
 }
 # ------------------------------------------------------------------------
@@ -94,7 +99,7 @@ function InstallApache
 {
     echo "Function: InstallApache starting"
 
-    yum -y install httpd openssl mod-ssl
+    yum -y install httpd openssl mod_ssl
 
     systemctl start httpd
     systemctl enable httpd
@@ -138,6 +143,7 @@ function InstallPhp
 
     # Add the Remi CentOS repository
     rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
     # Install yum-utils because the yum-config-manager is needed
     yum -y install yum-utils
 
@@ -190,13 +196,15 @@ function InstallPhpMyAdmin
 # ====================================================================================
 
 InstallBasicPackages
-ServerSetup
+# ServerSetup
 AddLocalHostNames
-InstallEncryptClient
-InstallDataBase
 InstallApache
-InstallPhp
-InstallPhpMyAdmin
+InstallEncryptClient
+# InstallDataBase
+# InstallPhp
+# InstallPhpMyAdmin
+
+
 
 # The following is still a work in progress....
 

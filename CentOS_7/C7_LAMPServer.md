@@ -31,6 +31,12 @@ Cleaning up challenges
 Unable to find a virtual host listening on port 80 which is currently needed for Certbot to prove to the CA 
 that you control your domain.  Please add a virtual host for port 80.
 
+https://certbot.eff.org/lets-encrypt/centosrhel7-apache
+The page above says "If you're feeling more conservative and would like to make th echanges to your
+Apache configuration by hand, run this command:
+
+certbot certonly --apache
+
 https://community.letsencrypt.org/t/unable-to-find-virtual-host-listening-on-port-80/80261/12
 #hashtags work fine by the way
 <VirtualHost *:80>
@@ -39,7 +45,7 @@ https://community.letsencrypt.org/t/unable-to-find-virtual-host-listening-on-por
   Redirect permanent / https://www.goldglamor.com/
 </VirtualHost>
 
-https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-centos-7
+https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-centos-7/
 
 Post Install Configuration Steps For PHP
 ----------------------------------------
