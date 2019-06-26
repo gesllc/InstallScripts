@@ -85,6 +85,9 @@ function InstallEncryptClient
 
     # Stop the Apache server before getting the certificate
     systemctl stop httpd
+    
+    # TODO: Add code to get the certificate
+    # TODO: Add code to restart apache
 
 
 
@@ -175,6 +178,9 @@ function InstallPhp
 # Should be able to access phpMyAdmin using http://<server>/phpMyAdmin
 # (After access permissions are set)
 #
+# www.phpmyadmin.net/home_page/index.php
+# Access on your server using: <dbhost>:8080/phpmyadmin
+#
 function InstallPhpMyAdmin
 {
     echo "Function: InstallPhpMyAdmin starting"
@@ -196,13 +202,13 @@ function InstallPhpMyAdmin
 # ====================================================================================
 
 InstallBasicPackages
-# ServerSetup
+# ServerSetup  # Will probably remove this function - don't think its needed
 AddLocalHostNames
 InstallApache
 InstallEncryptClient
-# InstallDataBase
-# InstallPhp
-# InstallPhpMyAdmin
+InstallDataBase
+InstallPhp
+InstallPhpMyAdmin
 
 
 
