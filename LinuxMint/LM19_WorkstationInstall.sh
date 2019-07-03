@@ -76,6 +76,9 @@ sudo apt install -y filezilla
 
 sudo apt install -y sqlitebrowser
 
+# And the google chrome browser
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+
 
 # curl https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit
 
