@@ -32,8 +32,11 @@ VMRC_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMRC}
 VMPLAYER=VMware-Player-15.1.0-13591040.x86_64.bundle
 VMPLAYER_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMRC}
 
-MYSQL_WB=mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb
-MYSQL_WB_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${MYSQL_WB}
+CHROME=google-chrome-stable_current_amd64.deb
+CHROME_PACKAGE=${APPLICATION_SERVER_URL}/Packages/${CHROME}
+
+# MYSQL_WB=mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb
+# MYSQL_WB_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${MYSQL_WB}
 
 # chmod +x VMware-Player-15.1.0-13591040.x86_64.bundle 
 # ./VMware-Player-15.1.0-13591040.x86_64.bundle 
@@ -77,7 +80,11 @@ sudo apt install -y filezilla
 sudo apt install -y sqlitebrowser
 
 # And the google chrome browser
-sudo dpkg -i google-chrome-stable_current_amd64.deb
+cd ~/Downloads
+
+wget ${CHROME_PACKAGE}
+sudo dpkg -i ${CHROME}
+cd
 
 
 # curl https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit
