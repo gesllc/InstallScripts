@@ -159,6 +159,90 @@ function UpdateEtcHostsEntries
 {
 echo "Function: UpdateEtcHostsEntries"
 
+if grep -q esximgmt /etc/hosts; then
+    echo "esximgmt entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding esximgmt to /etc/hosts"
+    echo '10.1.1.5     esximgmt  esximgmt.gomezengineering.lan   # ESXi Management' >> /etc/hosts
+fi
+
+if grep -q dionysus /etc/hosts; then
+    echo "dionysus entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding dionysus to /etc/hosts"
+    echo '10.1.1.20     dionysus  dionysus.gomezengineering.lan   # Subversion 3343/csvn 18080/viewvc' >> /etc/hosts
+fi
+
+if grep -q teamcity /etc/hosts; then
+    echo "teamcity entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding teamcity to /etc/hosts"
+    echo '10.1.1.21     teamcity  teamcity.gomezengineering.lan   # TeamCity 8111 ' >> /etc/hosts
+fi
+
+if grep -q hermes /etc/hosts; then
+    echo "hermes entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding hermes to /etc/hosts"
+    echo '10.1.1.25     hermes  hermes.gomezengineering.lan   # External Web Server' >> /etc/hosts
+fi
+
+if grep -q devserver /etc/hosts; then
+    echo "devserver entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding devserver to /etc/hosts"
+    echo '10.1.1.26     devserver  devserver.gomezengineering.lan   # Internal (Development) Web Server' >> /etc/hosts
+fi
+
+if grep -q minecraft /etc/hosts; then
+    echo "minecraft entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding minecraft to /etc/hosts"
+    echo '10.1.1.31     minecraft  minecraft.gomezengineering.lan   # Minecraft server' >> /etc/hosts
+fi
+
+if grep -q sonarqube /etc/hosts; then
+    echo "sonarqube entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding sonarqube to /etc/hosts"
+    echo '10.1.1.36     sonarqube  sonarqube.gomezengineering.lan   # Sonarqube 9000' >> /etc/hosts
+fi
+
+if grep -q porker /etc/hosts; then
+    echo "porker entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding porker to /etc/hosts"
+    echo '10.1.1.45     porker  porker.gomezengineering.lan   # ReadyNAS' >> /etc/hosts
+fi
+
+if grep -q cardinalcam /etc/hosts; then
+    echo "cardinalcam entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding cardinalcam to /etc/hosts"
+    echo '10.1.1.50     cardinalcam  cardinalcam.gomezengineering.lan   # Cardinal Cam ' >> /etc/hosts
+fi
+
+if grep -q ts7250b /etc/hosts; then
+    echo "ts7250b entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding ts7250b to /etc/hosts"
+    echo '10.1.1.51     ts7250b  ts7250b.gomezengineering.lan   # TS7250 # 2 ' >> /etc/hosts
+fi
+
+if grep -q ts7252 /etc/hosts; then
+    echo "ts7252 entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding ts7252 to /etc/hosts"
+    echo '10.1.1.52     ts7252  ts7252.gomezengineering.lan   # TS7252 Embedded Graphics' >> /etc/hosts
+fi
+
+if grep -q apollo /etc/hosts; then
+    echo "apollo entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding apollo to /etc/hosts"
+    echo '10.1.1.70     apollo  apollo.gomezengineering.lan   # Logitech Squeezebox Server 9000' >> /etc/hosts
+fi
+
 }
 # -------------------------------------------------------------------
 
