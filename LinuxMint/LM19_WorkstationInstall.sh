@@ -74,27 +74,10 @@ sudo apt install -y htop
 sudo apt install -y ddd
 sudo apt install -y filezilla
 
-
-# curl https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit
-
-}
-# -------------------------------------------------------------------
-
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#
-function FetchDatabaseTools
-{
-echo "Function: FetchDatabaseTools"
-
 sudo apt install -y sqlitebrowser
 
-sudo apt install libcurl3
 
-# libcurl3 seemed to install OK, however the following still reports
-# dependency problems :(
-# sudo dpkg --install mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb 
-
-    wget ${MYSQL_WB_INSTALLER} --directory-prefix ~/Downloads
+# curl https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit
 
 }
 # -------------------------------------------------------------------
@@ -124,7 +107,7 @@ echo "Function: InstallMusicApplications"
 sudo apt install -y qjackctl
 sudo apt install -y tuxguitar
 sudo apt install -y audacity
-sudo apt install -y lmms
+# sudo apt install -y lmms
 
 
 }
@@ -172,9 +155,9 @@ fi
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
-function Function_003
+function UpdateEtcHostsEntries
 {
-echo "Function: Function_003"
+echo "Function: UpdateEtcHostsEntries"
 
 }
 # -------------------------------------------------------------------
@@ -211,9 +194,8 @@ InstallMusicApplications
 SetGitUserPreferences
 
 FetchAndPrepareSlickEdit
-FetchDatabaseTools
-Function_003
-Function_004
+UpdateEtcHostsEntries
+# Function_004
 
 PerformUpgrade
 
