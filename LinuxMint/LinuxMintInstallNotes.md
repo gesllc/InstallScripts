@@ -13,7 +13,7 @@ Perform fresh install (selected "Install multimedia, MP3, etc option"), then on 
 * sudo apt-get -y update
 * sudo apt-get -y upgrade # <= Allow it to run, but will fail
 * sudo dpkg --configure -a
-* sudo apt-install -f
+* sudo apt install -f
 * sudo apt-get -y upgrade # <= Will succeed this time
 * --REBOOT--
 
