@@ -1,5 +1,6 @@
-# Linux Mint 19.1 Installation Notes
+# Linux Mint 19.1 (xfce) Installation Notes
 
+## Update issues (after fresh install)
 When installing with the associated script (fresh install from Linux Mint 19.1 xfce)
 would encounter failures during update/upgrade
 
@@ -7,7 +8,6 @@ Workaround has obtained from:
 https://forums.linuxmint.com/viewtopic.php?f=47&t=295975
 
 Specfic steps I used to get successful base install to run my install script against:
-
 Perform fresh install (selected "Install multimedia, MP3, etc option"), then on first boot, open Terminal and run:
 
 * sudo apt-get -y update
