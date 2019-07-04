@@ -35,7 +35,7 @@ VMRC_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMRC}
 # Install VMRC using sudo sh VMware-Player-15.1.0-13591040.x86_64.bundle
 VMPLAYER=VMware-Player-15.1.0-13591040.x86_64.bundle
 LICENSE=open_source_license_VMware_Workstation_15.1.0_Pro_and_Player_GA.txt
-VMPLAYER_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMRC}
+VMPLAYER_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMPLAYER}
 VMPLAYER_LICENSE=${APPLICATION_SERVER_URL}/Packages/${LICENSE}
 
 # Google Chrome definitions
