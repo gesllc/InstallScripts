@@ -15,7 +15,6 @@ Perform fresh install (selected "Install multimedia, MP3, etc option"), then on 
 * sudo dpkg --configure -a
 * sudo apt-install -f
 * sudo apt-get -y upgrade # <= Will succeed this time
-
 * --REBOOT--
 
 After the reboot, prepare for and run the script using:
@@ -24,21 +23,28 @@ After the reboot, prepare for and run the script using:
 * git clone <InstallScripts.git>
 * cd InstallScripts/LinuxMint
 * chmod +x LM19_WorkstationInstall.sh
+* Answer yes to jackctl question
 * sudo ./LM19_workstationInstall.sh
-
-## Remaining issues
-VMware Player is having issues, apparently the installation failed.  Will try again, but reboot before running the VMware installers (although VMRC seems to be working OK).
+* --REBOOT--
 
 ## VMware Installation
 
-After rebooting, was able to install VMware Player using:
-* sudo ./VMware-Player-15.1.0-13591040.x86_64.bundle
+Initial attemps of installing VMRC and Player during script execution were unsuccessful.  After running the script, when attempting install of either application, would encounter the message:
 
-Then installation of VMRC failed.  The following message was seen when installing VMware Player:
-*```An up to date libaio or libaio1 package from your system is preferred```
+```An up to date libaio or libaio1 package from your system is preferred```
+
+Tried to see which one would install:
 
 * sudo apt install libaio  # <= This failed
 * sudo apt install libaio1 # <= This was successful
+
+So the install script was modified to install libaio1 with the development packages.
+
+* sudo ./VMware-Player-15.1.0-13591040.x86_64.bundle # <= /usr/bin/vmplayer installed OK and runs
+* --REBOOT--
+* sudo ./VMware-Remote-Console-10.0.4-11818843.x86_64.bundle # <= Extracting VMware Installer...done, but does NOT run :(
+* sudo sh ./VMware-Remote-Console-10.0.4-11818843.x86_64.bundle # <= Fails the same :(  :(
+
 
 
 
