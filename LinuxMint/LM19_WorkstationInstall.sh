@@ -297,8 +297,8 @@ sudo wget ${VMPLAYER_LICENSE} --directory-prefix ~/Downloads
 # Now run the VMware installers
 chmod +x ~/Downloads/${VMRC}
 chmod +x ~/Downloads/${VMPLAYER}
-sudo sh ~/Downloads/${VMRC}
-sudo sh ~/Downloads/${VMPLAYER}
+# sudo sh ~/Downloads/${VMRC}
+# sudo sh ~/Downloads/${VMPLAYER}
 
 echo "Function: FetchAndInstallVMwarePackages completed"
 }
