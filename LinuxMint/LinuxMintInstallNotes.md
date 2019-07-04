@@ -35,7 +35,7 @@ After rebooting, was able to install VMware Player using:
 * sudo ./VMware-Player-15.1.0-13591040.x86_64.bundle
 
 Then installation of VMRC failed.  The following message was seen when installing VMware Player:
-```An up to date libaio or libaio1 package from your system is preferred```
+*```An up to date libaio or libaio1 package from your system is preferred```
 
 * sudo apt install libaio  # <= This failed
 * sudo apt install libaio1 # <= This was successful
