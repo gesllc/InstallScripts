@@ -21,17 +21,24 @@ APPLICATION_SERVER_URL=http://10.1.1.26/Applications
 # List of things that are downloaded from internal server
 # PY34_SOURCE=${APPLICATION_SERVER_URL}/Python/3.4.4/Python-3.4.4.tgz
 
+# SlickEdit definitions
 SE_TAR=se_23000102_linux64.tar.gz
 SE_KEY=SE_VLX818071_2300_Gomez.lic
 SLICKEDIT_INSTALLER=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
 SLICKEDIT_KEY=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_KEY}
 
+# VMware definitions
+# Install VMRC using sudo sh VMware-Remote-Console-10.0.4-11818843.x86_64.bundle
 VMRC=VMware-Remote-Console-10.0.4-11818843.x86_64.bundle
 VMRC_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMRC}
 
+# Install VMRC using sudo sh VMware-Player-15.1.0-13591040.x86_64.bundle
 VMPLAYER=VMware-Player-15.1.0-13591040.x86_64.bundle
+LICENSE=open_source_license_VMware_Workstation_15.1.0_Pro_and_Player_GA.txt
 VMPLAYER_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMRC}
+VMPLAYER_LICENSE=${APPLICATION_SERVER_URL}/Packages/${LICENSE}
 
+# Google Chrome definitions
 CHROME=google-chrome-stable_current_amd64.deb
 CHROME_PACKAGE=${APPLICATION_SERVER_URL}/Packages/${CHROME}
 
@@ -49,6 +56,12 @@ function PerformUpdate
 echo "Function: PerformUpdate"
 
 sudo apt-get -y update
+
+# After the update command completes, per Linux Mint forums, the
+# following commands are required because the package manager
+# is not configured correctly after a fresh install.
+sudo dpkg --configure -a
+sudo apt-get install -f
 
 echo "Function: PerformUpdate completed"
 }
@@ -86,10 +99,9 @@ sudo apt install -y sqlitebrowser
 # And the google chrome browser
 cd ~/Downloads
 
-wget ${CHROME_PACKAGE}
-sudo dpkg -i ${CHROME}
+wget ${CHROME_PACKAGE} --directory-prefix ~/Downloads
+sudo dpkg -i ~/Downloads/${CHROME}
 cd
-
 
 # curl https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit
 
@@ -274,11 +286,21 @@ echo "Function: UpdateEtcHostsEntries completed"
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
-function Function_004
+function FetchAndInstallVMwarePackages
 {
-echo "Function: Function_004"
+echo "Function: FetchAndInstallVMwarePackages"
 
-echo "Function: Function_004 completed"
+sudo wget ${VMRC_INSTALLER} --directory-prefix ~/Downloads
+sudo wget ${VMPLAYER_INSTALLER} --directory-prefix ~/Downloads
+sudo wget ${VMPLAYER_LICENSE} --directory-prefix ~/Downloads
+
+# Now run the VMware installers
+chmod +x ~/Downloads/${VMRC}
+chmod +x ~/Downloads/${VMPLAYER}
+sudo sh ~/Downloads/${VMRC}
+sudo sh ~/Downloads/${VMPLAYER}
+
+echo "Function: FetchAndInstallVMwarePackages completed"
 }
 # -------------------------------------------------------------------
 
@@ -296,8 +318,9 @@ echo "Function: Function_004 completed"
 echo "Starting script execution"
 uname -a
 
-PerformUpdate
-PerformUpgrade
+# Abandoning these due to Mint Package manager issues on fresh install
+# PerformUpdate
+# PerformUpgrade
 
 InstallDevelopmentTools
 InstallAudioApplications
@@ -306,8 +329,7 @@ SetGitUserPreferences
 
 FetchAndPrepareSlickEdit
 UpdateEtcHostsEntries
-# Function_004
-
+FetchAndInstallVMwarePackages
 
 echo "Script execution complete"
 
