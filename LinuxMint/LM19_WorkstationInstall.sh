@@ -93,6 +93,7 @@ sudo apt install -y git-gui
 sudo apt install -y htop
 sudo apt install -y ddd
 sudo apt install -y filezilla
+sudo apt install -y gimp
 sudo apt install -y libaio1   # <- Needed for VMware Player & VMRC
 
 sudo apt install -y sqlitebrowser
