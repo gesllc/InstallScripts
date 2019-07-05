@@ -137,9 +137,11 @@ echo "Function: InstallMusicApplications"
 # NOTE: qjackctl requires permission to perform real time execution
 #       Be sure to answer Yes.
 sudo apt install -y qjackctl
-sudo apt install -y tuxguitar
 sudo apt install -y audacity
 sudo apt install -y lmms
+
+sudo apt install -y tuxguitar
+sudo apt install -y tuxguitar-jsa tuxguitar-alsa tuxguitar-fluidsynth
 
 echo "Function: InstallMusicApplications completed"
 }
