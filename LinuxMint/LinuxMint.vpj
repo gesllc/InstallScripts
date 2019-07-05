@@ -63,7 +63,9 @@
         <Folder
             Name="Resource Files"
             Filters="*.ico;*.cur;*.dlg"
-            GUID="{4284739D-7119-4DE0-9F97-585116B4901F}"/>
+            GUID="{4284739D-7119-4DE0-9F97-585116B4901F}">
+            <F N="LinuxMintInstallNotes.md"/>
+        </Folder>
         <Folder
             Name="Bitmaps"
             Filters="*.bmp"

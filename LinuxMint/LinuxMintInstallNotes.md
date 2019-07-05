@@ -29,7 +29,7 @@ After the reboot, prepare for and run the script using:
 
 ## VMware Installation
 
-Initial attemps of installing VMRC and Player during script execution were unsuccessful.  After running the script, when attempting install of either application, would encounter the message:
+Initial attemps of installing VMRC and Player during script execution were unsuccessful.  When attempting install of either application, would encounter the message:
 
 ```An up to date libaio or libaio1 package from your system is preferred```
 
@@ -40,10 +40,24 @@ Tried to see which one would install:
 
 So the install script was modified to install libaio1 with the development packages.
 
-* sudo ./VMware-Player-15.1.0-13591040.x86_64.bundle # <= /usr/bin/vmplayer installed OK and runs
+* sudo ./VMware-Player-15.1.0-13591040.x86_64.bundle # <= /usr/bin/vmplayer installed OK and runs (on VM)
 * --REBOOT--
 * sudo ./VMware-Remote-Console-10.0.4-11818843.x86_64.bundle # <= Extracting VMware Installer...done, but does NOT run :(
 * sudo sh ./VMware-Remote-Console-10.0.4-11818843.x86_64.bundle # <= Fails the same :(  :(
+
+## Post Installation Saga
+
+VMware Player would not install, gave message that CPU was too old.  Research showed that VMware has started obsoleting CPU families with version 14 of Workstation (which includes Player).  So I managed to find Player version 12 on myvmware.com.  I installed it, it shows up in the Mint menus, but appears to do nothing when attempting to start it.  From a shell, entering /usr/bin/vmplayer & doesn't start it either, but you see the message:
+
+```/usr/lib/vmware/bin/vmware-modconfig: Relink `/lib/x86_64-linux-gnu/libbsd.so.0' with `/lib/x86_64-linux-gnu/librt.so.1' for IFUNC symbol `clock_gettime'```
+
+Tried installation of VMRC, seemed to be OK, but the installer finished with the message "Installation unsuccessful".  When attempting to start it get the message (in a pop up dialog):
+
+``` Failed to open URI "vmrc://clone:cst-52d797ca-bafd-1ea5-3721-af01cb7fb40e--tp-A8-B6-AD-50-4A-C9-A3-C7-5E-85-1C-70-98-1E-A3-B6-22-21-75@esximgmt/?moid=9" The specified location is not supported.```
+
+Maybe its time for VirtualBox!!
+
+
 
 
 
