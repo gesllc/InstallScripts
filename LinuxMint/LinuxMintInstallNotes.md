@@ -57,8 +57,13 @@ Tried installation of VMRC, seemed to be OK, but the installer finished with the
 
 Maybe its time for VirtualBox!!
 
+### Tux Guitar
 
+Installation of Tux Guitar was included in the associated install script, along with support utilities for getting the sound to work.  However Mint installs version 1.2.23, but I had been making some exercise files using 1.5.2 on my CentOS laptop. 
 
+* Found & downloaded tuxguitar-1.5.2-linux-x86_64.deb on SourceForge
+* sudo dpkg -i ~/Downloads/tuxguitar*.deb; sudo apt-get -f install
+It complained about various Java version concerns, but after it finished, Tux started right up and was able to open one my exercise files made previously on 1.5.2.  Hooray !!
 
 
 
