@@ -38,15 +38,16 @@ VMPLAYER=VMware-Player-12.5.9-7535481.x86_64.bundle
 VMPLAYER_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VMPLAYER}
 # VMPLAYER_LICENSE=${APPLICATION_SERVER_URL}/Packages/${LICENSE}
 
+# Virtual Box Definitions
+VIRTUAL_BOX=virtualbox-6.0_6.0.8-130520_Ubuntu_bionic_amd64.deb
+VBOX_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${VIRTUAL_BOX}
+
 # Google Chrome definitions
 CHROME=google-chrome-stable_current_amd64.deb
 CHROME_PACKAGE=${APPLICATION_SERVER_URL}/Packages/${CHROME}
 
-# MYSQL_WB=mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb
-# MYSQL_WB_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${MYSQL_WB}
-
-# chmod +x VMware-Player-15.1.0-13591040.x86_64.bundle 
-# ./VMware-Player-15.1.0-13591040.x86_64.bundle 
+TUX_GUITAR=tuxguitar-1.5.2-linux-x86_64.deb
+TUX_GUITAR_INSTALLER=${APPLICATION_SERVER_URL}/Packages/${TUX_GUITAR}
 
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -140,8 +141,11 @@ sudo apt install -y qjackctl
 sudo apt install -y audacity
 sudo apt install -y lmms
 
-sudo apt install -y tuxguitar
-sudo apt install -y tuxguitar-jsa tuxguitar-alsa tuxguitar-fluidsynth
+# sudo apt install -y tuxguitar
+# sudo apt install -y tuxguitar-jsa tuxguitar-alsa tuxguitar-fluidsynth
+
+sudo wget ${TUX_GUITAR_INSTALLER} --directory-prefix /opt
+sudo dpkg -i ~/Downloads/${TUX_GUITAR}; sudo apt-get -f install
 
 echo "Function: InstallMusicApplications completed"
 }
@@ -290,21 +294,26 @@ echo "Function: UpdateEtcHostsEntries completed"
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
-function FetchAndInstallVMwarePackages
+function FetchAndInstallVirtualizationPackages
 {
-echo "Function: FetchAndInstallVMwarePackages"
+echo "Function: FetchAndInstallVirtualizationPackages"
 
 sudo wget ${VMRC_INSTALLER} --directory-prefix ~/Downloads
-sudo wget ${VMPLAYER_INSTALLER} --directory-prefix ~/Downloads
-# sudo wget ${VMPLAYER_LICENSE} --directory-prefix ~/Downloads
-
-# Now run the VMware installers
 chmod +x ~/Downloads/${VMRC}
-chmod +x ~/Downloads/${VMPLAYER}
+
+# sudo wget ${VMPLAYER_INSTALLER} --directory-prefix ~/Downloads
+# sudo wget ${VMPLAYER_LICENSE} --directory-prefix ~/Downloads
+# chmod +x ~/Downloads/${VMPLAYER}
+
 # sudo sh ~/Downloads/${VMRC}
 # sudo sh ~/Downloads/${VMPLAYER}
 
-echo "Function: FetchAndInstallVMwarePackages completed"
+# Transitioning to VirtualBox due to processor limitations with VMplayer
+sudo apt install -y libqt5opengl5 # <- Needed for VirtualBox 6.0
+sudo wget ${VBOX_INSTALLER} --directory-prefix ~/Downloads
+sudo dpkg -i ${VIRTUAL_BOX}
+
+echo "Function: FetchAndInstallVirtualizationPackages completed"
 }
 # -------------------------------------------------------------------
 
@@ -333,7 +342,7 @@ SetGitUserPreferences
 
 FetchAndPrepareSlickEdit
 UpdateEtcHostsEntries
-FetchAndInstallVMwarePackages
+FetchAndInstallVirtualizationPackages
 
 echo "Script execution complete"
 

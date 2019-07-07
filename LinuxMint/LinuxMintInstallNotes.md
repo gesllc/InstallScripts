@@ -57,6 +57,8 @@ Tried installation of VMRC, seemed to be OK, but the installer finished with the
 
 Maybe its time for VirtualBox!!
 
+Final attempt (hopefully), is to install VMRC (NOT Player), and install VirtualBox 6.0.  Taking a stab at it on the VM.
+
 ### Tux Guitar
 
 Installation of Tux Guitar was included in the associated install script, along with support utilities for getting the sound to work.  However Mint installs version 1.2.23, but I had been making some exercise files using 1.5.2 on my CentOS laptop. 
