@@ -144,7 +144,7 @@ sudo apt install -y lmms
 # sudo apt install -y tuxguitar
 # sudo apt install -y tuxguitar-jsa tuxguitar-alsa tuxguitar-fluidsynth
 
-sudo wget ${TUX_GUITAR_INSTALLER} --directory-prefix /opt
+sudo wget ${TUX_GUITAR_INSTALLER} --directory-prefix ~/Downloads
 sudo dpkg -i ~/Downloads/${TUX_GUITAR}; sudo apt-get -f install
 
 echo "Function: InstallMusicApplications completed"
