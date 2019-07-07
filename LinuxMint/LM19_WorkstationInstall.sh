@@ -311,7 +311,7 @@ chmod +x ~/Downloads/${VMRC}
 # Transitioning to VirtualBox due to processor limitations with VMplayer
 sudo apt install -y libqt5opengl5 # <- Needed for VirtualBox 6.0
 sudo wget ${VBOX_INSTALLER} --directory-prefix ~/Downloads
-sudo dpkg -i ${VIRTUAL_BOX}
+sudo dpkg -i ~/Downloads/${VIRTUAL_BOX}
 
 echo "Function: FetchAndInstallVirtualizationPackages completed"
 }
