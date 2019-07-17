@@ -29,7 +29,7 @@ else
     sed -i '/distroverpkg/ a proxy=http://10.155.1.10:80' /etc/yum.conf
 fi
 }
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Install additional repositories to assist with virtualization support
@@ -46,7 +46,7 @@ function PerformUpdate
 {
 yum -y update
 }
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Install Dynamic Kernel Module Support (Mandatory for VBox Guest Additions, helpful for VMware)
@@ -55,7 +55,7 @@ function InstallDKMS
 echo "Function: InstallDKMS"
 yum -y --enablerepo=epel install dkms
 }
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Disable SELinux - seemed to help VirtualBox installations, but not recommended normally
@@ -66,7 +66,7 @@ echo "Function: DisableSELinux"
 setenforce 0
 echo "SELINUX=disabled" > /etc/selinux/config
 }
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Perform update and install items that may not have been included in 
@@ -90,7 +90,7 @@ yum -y install graphviz-devel
 yum -y install graphviz-python
 yum -y install graphviz-php
 }
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Create a directory to use for mounting the host share
@@ -108,7 +108,7 @@ else
 fi
 }
 # End of share directory creation
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Check for the previous installation of Python 3.4, and if not installed,
@@ -147,7 +147,7 @@ else
 fi
 }
 # End of Python 3.4 configuration section
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Install additional Python libraries USING PROXIES (Required in bioMerieux) 
@@ -175,7 +175,7 @@ echo "Function: InstallPythonExtensions"
 /usr/local/bin/pip3.4 install pyusb
 }
 # End of Python extension library installation section
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Check for existence of the CPPUnit library on this VM and install if not already there
@@ -224,7 +224,7 @@ else
 fi
 }
 # End of CPPUnit installation section
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Check for existence of the Sonar Scanner on this VM and install if not already there
@@ -254,7 +254,7 @@ else
 fi
 }
 # End of Sonar Scanner configuration section
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 InstallGoogleChrome
@@ -276,7 +276,7 @@ else
 fi
 }
 # End of Google Chrome section
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Install SlickEdit 2017
@@ -308,7 +308,42 @@ else
 fi
 }
 # End of SlickEdit creation
+# ------------------------------------------------------------------------
+
 ##########################################################################
+# Install the LaTeX document generation tool set
+# https://www.systutorials.com/241660/how-to-install-tex-live-on-centos-7-linux/
+function InstallLaTeX
+{
+
+    # Uninstall old version first
+    yum -y erase texlive texlive*
+
+    # Install dependencies 
+    yum -y install perl-Digest-MD5
+
+    LATEX_NAME=install-tl-unx.tar.gz
+    LATEX_URL=${PACKAGE_SERVER_URL}/${LATEX_NAME}
+
+    mkdir projects
+    cd projects
+
+    # Use wget to pull the Python package
+    wget ${LATEX_URL}
+    tar -xvf ${LATEX_NAME}
+    cd install-tl*
+
+    # The following will need some interaction because it asks for settings
+    ./install-tl
+
+
+
+
+
+    cd ..
+    rm -Rf projects
+
+}
 
 ##########################################################################
 # Add static ip addresses to /etc/hosts to allow hostnames instead of only IPs
@@ -352,7 +387,7 @@ else
 fi
 }
 # BMX Static IP updates finished
-##########################################################################
+# ------------------------------------------------------------------------
 
 
 ##########################################################################
@@ -419,7 +454,7 @@ fi
 
 }
 # Local Static IP updates finished
-##########################################################################
+# ------------------------------------------------------------------------
 
 ##########################################################################
 # Install Sqlite Studio 
@@ -442,7 +477,7 @@ cd sqlitestudio/output/build
 make
 
 }
-##########################################################################
+# ------------------------------------------------------------------------
 
 
 
@@ -475,6 +510,7 @@ InstallSonarScanner
 InstallGoogleChrome
 # InstallSqliteStudio
 InstallSlickEdit
+InstallLaTeX
 # AddBiomerieuxHostNames
 AddLocalHostNames
 
