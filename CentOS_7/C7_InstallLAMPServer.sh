@@ -157,6 +157,21 @@ function InstallSelfSignedCertificate
 
     # echo -e " The Certificate and Key for $HOSTNAME has been generated!\nPlease link it to Apache SSL available website!"
 
+    # Manual steps required:
+    # Edit /etc/httpd/conf.d/ssl.conf
+    #
+    # Find the section: VirtualHost_default_:443
+    # Add the following Virtual Host configuration on the next line:
+    # ServerName usstlweb99.us.noam.biomerieux.lan
+    #
+    # Verify that the following variables are set appropriately in the same file:
+    # SSLEngine on
+    # SSLCertificateFile /etc/httpd/ssl/<FQDN>.crt
+    # SSLCertificateKeyFile /etc/httpd/ssl/<FQDN>.key
+    #
+    # Restart apache
+    # systemctl restart httpd
+
     echo "Function: InstallSelfSignedCertificate complete"
 }
 # ------------------------------------------------------------------------
@@ -266,9 +281,6 @@ function InstallPhpMyAdmin
 # Script execution begins here
 #
 # ====================================================================================
-
-echo -e "Enter your server's hostname: \nThis will be used to generate the Apache SSL Certificate and Key."
-read HOSTNAME
 
 InstallBasicPackages
 # ServerSetup  # Will probably remove this function - don't think its needed
