@@ -146,23 +146,16 @@ function InstallSelfSignedCertificate
     echo -e "Enter your server's FQDN: \nThis will be used to generate the Apache SSL Certificate and Key."
     read HOSTNAME
 
-    # openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out $HOSTNAME.key
-
-    # openssl req -new -key $HOSTNAME.key -out $HOSTNAME.csr
-    # openssl x509 -req -days 365 -in $HOSTNAME.csr -signkey $HOSTNAME.key -out $HOSTNAME.crt
-
     openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/httpd/ssl/$HOSTNAME.key -out /etc/httpd/ssl/$HOSTNAME.crt
 
     chmod 600 /etc/httpd/ssl/$HOSTNAME.*
-
-    # echo -e " The Certificate and Key for $HOSTNAME has been generated!\nPlease link it to Apache SSL available website!"
 
     # Manual steps required:
     # Edit /etc/httpd/conf.d/ssl.conf
     #
     # Find the section: VirtualHost_default_:443
     # Add the following Virtual Host configuration on the next line:
-    # ServerName usstlweb99.us.noam.biomerieux.lan
+    # ServerName usstlweb99
     #
     # Verify that the following variables are set appropriately in the same file:
     # SSLEngine on
