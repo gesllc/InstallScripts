@@ -345,6 +345,13 @@ function AddLocalHostNames
 {
 echo "Function: AddLocalHostNames"
 
+if grep -q esximgmt /etc/hosts; then
+    echo "esximgmt entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding esximgmt to /etc/hosts (ESXi Server)"
+    echo '10.1.1.5     esximgmt  esximgmt.gomezengineering.lan    # Infrastructure Server' >> /etc/hosts
+fi
+
 if grep -q dionysus /etc/hosts; then
     echo "dionysus entry already exists in /etc/hosts (skipping)"
 else
@@ -370,7 +377,7 @@ if grep -q hermes /etc/hosts; then
     echo "hermes entry already exists in /etc/hosts (skipping)"
 else
     echo "Adding hermes to /etc/hosts (public web server)"
-    echo '10.1.1.26    hermes  hermes.gomezengineering.lan    # Public web server' >> /etc/hosts
+    echo '10.1.1.25    hermes  hermes.gomezengineering.lan    # Public web server' >> /etc/hosts
 fi
 
 if grep -q devserver /etc/hosts; then
@@ -380,18 +387,18 @@ else
     echo '10.1.1.26    devserver  devserver.gomezengineering.lan    # Development web server' >> /etc/hosts
 fi
 
-if grep -q bmxprototype /etc/hosts; then
-    echo "bmxprototype entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding bmxprototype to /etc/hosts (Secondary Subversion server)"
-    echo '10.1.1.35    bmxprototype  bmxprototype.gomezengineering.lan    # Secondary Subversion' >> /etc/hosts
-fi
-
 if grep -q sonarqube /etc/hosts; then
     echo "sonarqube entry already exists in /etc/hosts (skipping)"
 else
     echo "Adding sonarqube to /etc/hosts"
     echo '10.1.1.36    sonarqube   sonarqube.gomezengineering.lan    # SonarQube' >> /etc/hosts
+fi
+
+if grep -q porker /etc/hosts; then
+    echo "porker entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding porker to /etc/hosts"
+    echo '10.1.1.45    porker   porker.gomezengineering.lan    # NetGear ReadyNAS' >> /etc/hosts
 fi
 
 if grep -q apollo /etc/hosts; then
