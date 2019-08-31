@@ -156,15 +156,6 @@ function InstallPythonExtensions
 {
 echo "Function: InstallPythonExtensions"
 
-# This section for BMX (includes proxy information)
-# /usr/local/bin/pip3.4 --proxy=http://10.155.1.10:80 install --upgrade pip setuptools
-# /usr/local/bin/pip3.4 --proxy=http://10.155.1.10:80 install numpy
-# /usr/local/bin/pip3.4 --proxy=http://10.155.1.10:80 install matplotlib
-# /usr/local/bin/pip3.4 --proxy=http://10.155.1.10:80 install cython
-# /usr/local/bin/pip3.4 --proxy=http://10.155.1.10:80 install pexpect
-# /usr/local/bin/pip3.4 --proxy=http://10.155.1.10:80 install robotframework
-# /usr/local/bin/pip3.4 --proxy=http://10.155.1.10:80 install pyusb
-
 # The no proxy version
 /usr/local/bin/pip3.4 install --upgrade pip setuptools
 /usr/local/bin/pip3.4 install numpy
@@ -344,49 +335,7 @@ function InstallLaTeX
     rm -Rf projects
 
 }
-
-##########################################################################
-# Add static ip addresses to /etc/hosts to allow hostnames instead of only IPs
-function AddBiomerieuxHostNames
-{
-echo "Function: AddBiomerieuxHostNames"
-
-if grep -q usstlsvn02 /etc/hosts; then
-    echo "usstlsvn02 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstlsvn02 to /etc/hosts"
-    echo '10.17.20.6     usstlsvn02  usstlsvn02.us.noam.biomerieux.net' >> /etc/hosts
-fi
-
-if grep -q usstlsvn04 /etc/hosts; then
-    echo "usstlsvn04 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstlsvn04 to /etc/hosts"
-    echo '10.17.20.8     usstlsvn04  usstlsvn04.us.noam.biomerieux.net' >> /etc/hosts
-fi
-
-if grep -q usstlbas02 /etc/hosts; then
-    echo "usstlbas02 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstlbas02 to /etc/hosts"
-    echo '10.17.20.10    usstlbas02  usstlbas02.us.noam.biomerieux.net' >> /etc/hosts
-fi
-
-if grep -q usstllic01 /etc/hosts; then
-    echo "usstllic01 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstllic01 to /etc/hosts"
-    echo '10.17.20.13    usstllic01  usstllic01.us.noam.biomerieux.net' >> /etc/hosts
-fi
-
-if grep -q sonarqube /etc/hosts; then
-    echo "sonarqube entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding sonarqube to /etc/hosts"
-    echo '10.17.20.29    sonarqube   sonarqube.us.noam.biomerieux.net' >> /etc/hosts
-fi
-}
-# BMX Static IP updates finished
+# LaTeX installation finished
 # ------------------------------------------------------------------------
 
 
@@ -505,12 +454,12 @@ InstallDevelopmentApplications
 # CreateHostShareDirectory
 InstallPython34
 InstallPythonExtensions
-InstallCPPUnit
-InstallSonarScanner
-InstallGoogleChrome
+# InstallCPPUnit
+# InstallSonarScanner
+# InstallGoogleChrome
 # InstallSqliteStudio
-InstallSlickEdit
-InstallLaTeX
+# InstallSlickEdit
+# InstallLaTeX
 # AddBiomerieuxHostNames
 AddLocalHostNames
 
