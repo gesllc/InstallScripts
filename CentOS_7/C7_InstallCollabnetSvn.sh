@@ -7,9 +7,9 @@
 #  3.) During install, create root & admin accounts
 #  4.) Allow installation time to complete, then reboot (disconnect CD image)
 #  5.) Test logging in as root & admin
-#  6.) As root, install Git -> systemctl stop packagekit; yum -y install git
+#  6.) As root, install Git -> yum -y install git
 #  7.) git clone https://github.com/gesllc/InstallScripts.git
-#  8.) shutdown -r now
+#  8.) shutdown -h now
 #  9.) Create secondary drive in vCenter
 # 10.) Power on, then as root:
 #     fdisk /dev/sdb
@@ -35,16 +35,16 @@
 # Had a horrible time downloading the CollabNet Subversion Edge package.
 # Here is the md5 hash for a sanity check
 #
-# MD5SUM of CollabNet Installer: 0862eaba2dd1b048dc6c10cb2b1e910b
+# MD5SUM of CollabNet Installer: 0862eaba2dd1b048dc6c10cb2b1e910b <= Does not match downloaded package !!
 # 
 
 # ========================================================================
 # Variable definitions
 
-APPLICATION_SERVER_URL=http://10.1.1.26/Applications
+INTERNAL_SERVER_URL=http://10.1.1.26/Applications
 
 CSVN_APP=CollabNetSubversionEdge-5.2.4_linux-x86_64.tar.gz
-CSVN_URL=${APPLICATION_SERVER_URL}/ServerApplications/${CSVN_APP}
+CSVN_URL=${INTERNAL_SERVER_URL}/ServerApplications/${CSVN_APP}
 
 # ========================================================================
 
