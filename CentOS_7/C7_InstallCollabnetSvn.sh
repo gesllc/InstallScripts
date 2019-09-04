@@ -87,7 +87,8 @@ function InstallCollabNetSubversion
     cd /opt
     # runuser admin -c 'tar zxf CollabNetSubversionEdge-5.2.4_linux-x86_64.tar.gz'
     gunzip ${CSVN_ZIP}
-    runuser admin -c 'tar xvf ${CSVN_APP}'
+    export CSVN_EXP=${CSVN_APP}
+    runuser admin -c 'tar xvf ${CSVN_EXP}'
 }
 # ------------------------------------------------------------------------
 
