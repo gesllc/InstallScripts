@@ -43,8 +43,9 @@
 
 INTERNAL_SERVER_URL=http://10.1.1.26/Applications
 
-CSVN_APP=CollabNetSubversionEdge-5.2.4_linux-x86_64.tar.gz
-CSVN_URL=${INTERNAL_SERVER_URL}/ServerApplications/${CSVN_APP}
+CSVN_ZIP=CollabNetSubversionEdge-5.2.4_linux-x86_64.tar.gz
+CSVN_APP=CollabNetSubversionEdge-5.2.4_linux-x86_64.tar
+CSVN_URL=${INTERNAL_SERVER_URL}/ServerApplications/${CSVN_ZIP}
 
 # ========================================================================
 
@@ -79,12 +80,13 @@ function SetupJavaHome
 function InstallCollabNetSubversion
 {
     wget ${CSVN_URL} --directory-prefix=/opt
-    md5sum /opt/${CSVN_APP} > /opt/CsvnMd5Log.txt
+    md5sum /opt/${CSVN_ZIP} > /opt/CsvnMd5Log.txt
 
     chown -R admin:admin /opt/csvn
 
     cd /opt
     # runuser admin -c 'tar zxf CollabNetSubversionEdge-5.2.4_linux-x86_64.tar.gz'
+    gunzip ${CSVN_ZIP}
     runuser admin -c 'tar zxf ${CSVN_APP}'
 }
 # ------------------------------------------------------------------------
