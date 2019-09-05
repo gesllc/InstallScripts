@@ -107,6 +107,7 @@ function SetupFirewallRules
 
     firewall-cmd --zone=public --permanent --add-port=3343/tcp
     firewall-cmd --zone=public --permanent --add-port=4434/tcp
+    firewall-cmd --zone=public --permanent --add-port=18080/tcp
     firewall-cmd --reload
 }
 # ------------------------------------------------------------------------
