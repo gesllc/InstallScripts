@@ -98,12 +98,13 @@ function InstallCollabNetSubversion
 # 3343 - http access to web console
 # 4434 - https access to web console
 # 
+# 18080 - https access to viewvc web interface
+# 
 # XXX - whatever port you configure you want Apache to use from the SVN
 #       Edge UI.  Normally, this would be 80 or 443
 #
 function SetupFirewallRules
 {
-
 
     firewall-cmd --zone=public --permanent --add-port=3343/tcp
     firewall-cmd --zone=public --permanent --add-port=4434/tcp
