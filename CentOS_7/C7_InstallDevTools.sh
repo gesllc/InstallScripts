@@ -12,24 +12,8 @@ SONAR_SCANNER=${APPLICATION_SERVER_URL}/ServerApplications/sonar-scanner-cli-3.0
 
 # SLICK_EDIT=${APPLICATION_SERVER_URL}/SlickEdit/Linux/se_22000201_installed.tar.gz
 # Define the name of the tar file so that it can be reused way down below
-SE_TAR=se_23000011_linux64_installed.tar.gz
+SE_TAR=se_24000003_linux64_beta2.tar.gz
 SLICK_EDIT=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
-
-##########################################################################
-# To perform installations or updates, the proxy setting must be included in
-# /etc/yum.conf (otherwise most of the installation will fail).
-#
-function SetBiomerieuxProxy
-{
-echo "Function: SetBiomerieuxProxy"
-
-if grep -q proxy /etc/yum.conf; then
-    echo "yum.conf proxy appears to have previously been set (skipping)"
-else    
-    sed -i '/distroverpkg/ a proxy=http://10.155.1.10:80' /etc/yum.conf
-fi
-}
-# ------------------------------------------------------------------------
 
 ##########################################################################
 # Install additional repositories to assist with virtualization support
