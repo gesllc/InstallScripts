@@ -140,20 +140,25 @@ function InstallSelfSignedCertificate
     # nano /usr/local/bin/apache_ssl
     #!/bin/bash
 
-    mkdir /etc/httpd/ssl
+    # mkdir /etc/httpd/ssl
     # cd /etc/httpd/ssl
 
     echo -e "Enter your server's FQDN: \nThis will be used to generate the Apache SSL Certificate and Key."
     read HOSTNAME
 
-    openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/httpd/ssl/$HOSTNAME.key -out /etc/httpd/ssl/$HOSTNAME.crt
+    # Try this path for keys (workaround for selinux path issues): /etc/pki/tls/certs/$HOSTNAME.xxx
+    # AH00526: Syntax error on line 110 of /etc/httpd/conf.d/ssl.conf:
+    # SSLCertificateKeyFile: file '/etc/pki/tls/private/usstlweb99.key' does not exist or is empty
+    openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/pki/tls/private/usstlweb99.key -out /etc/pki/tls/private/usstlweb99.crt
+    # openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/httpd/ssl/$HOSTNAME.key -out /etc/httpd/ssl/$HOSTNAME.crt
 
-    chmod 600 /etc/httpd/ssl/$HOSTNAME.*
+    # chmod 600 /etc/httpd/ssl/$HOSTNAME.*
+    chmod 600 /etc/pki/tls/private/$HOSTNAME.*
 
     # Manual steps required:
     # Edit /etc/httpd/conf.d/ssl.conf
     #
-    # Find the section: VirtualHost_default_:443
+    # Find the section: VirtualHost _default_:443
     # Add the following Virtual Host configuration on the next line:
     # ServerName usstlweb99
     #
@@ -260,7 +265,27 @@ function InstallPhpMyAdmin
     echo "Function: InstallPhpMyAdmin starting"
 
     yum -y install phpMyAdmin
+        
+    # Edit /etc/httpd/conf.d/phpMyAdmin.conf
+    # Comment all instances of Require ip 127.0.0.1
+    # Comment all instances of Require ip ::1
+    # Comment all instances of Allow from 127.0.0.1
+    # Comment all instances of Allow from ::1
+    # For all of the items commented above, add the line:
+    # Require all granted
+    #
+    # If MySQL password has not yet been set:
+    # mysql (starts mysql prompt)
+    # use mysql;
+    # updte user setpassword=PASSWORD("<password>") where User='root';
+    # flush privileges;
+    # quit;
+    # Then restart Apache ...
+        
     systemctl restart httpd
+    
+    # Access PhpMyAdmin using: http://<hostname>/phpmyadmin
+    # Log in using root password set above.
 
     echo "Function: InstallPhpMyAdmin complete"
 }
