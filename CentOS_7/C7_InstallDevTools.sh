@@ -20,15 +20,13 @@ SLICK_EDIT=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
 # For more information: https://fedoraproject.org/wiki/EPEL
 function InstallAdditionalRepositories
 {
-echo "Function: InstallAdditionalRepositories"
-
-# The EPEL repository itself (Extra Packages for Enterprise Linux)
-yum -y install epel-release
+    echo "Function: InstallAdditionalRepositories"
+    yum -y install epel-release
 }
 
 function PerformUpdate
 {
-yum -y update
+    yum -y update
 }
 # ------------------------------------------------------------------------
 
@@ -36,8 +34,8 @@ yum -y update
 # Install Dynamic Kernel Module Support (Mandatory for VBox Guest Additions, helpful for VMware)
 function InstallDKMS
 {
-echo "Function: InstallDKMS"
-yum -y --enablerepo=epel install dkms
+    echo "Function: InstallDKMS"
+    yum -y --enablerepo=epel install dkms
 }
 # ------------------------------------------------------------------------
 
@@ -58,21 +56,22 @@ echo "SELINUX=disabled" > /etc/selinux/config
 # Packages can be repeated without concern (will be skipped if already installed)
 function InstallDevelopmentApplications
 {
-echo "Function: InstallDevelopmentApplications"
-yum -y install subversion
-yum -y install gedit
+    echo "Function: InstallDevelopmentApplications"
+    yum -y install subversion
+    yum -y install gedit
 
-# Install development & test support items
-yum -y groupinstall "Development Tools"
-yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel libpng libpng-devel
-yum -y install python-devel
-yum -y install cmake
+    # Install development & test support items
+    yum -y groupinstall "Development Tools"
+    yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel libpng libpng-devel
+    yum -y install python-devel
+    yum -y install cmake
 
-# Install graphing helpers for Doxygen
-yum -y install graphviz-graphs
-yum -y install graphviz-devel
-yum -y install graphviz-python
-yum -y install graphviz-php
+    # Install graphing helpers for Doxygen
+    yum -y install graphviz-graphs
+    yum -y install graphviz-devel
+    yum -y install graphviz-python
+    yum -y install graphviz-php
+
 }
 # ------------------------------------------------------------------------
 
@@ -82,14 +81,14 @@ yum -y install graphviz-php
 # (as developer)  /usr/bin/vmhgfs-fuse /home/developer/HostShare 
 function CreateHostShareDirectory
 {
-echo "Function: CreateHostShareDirectory"
-if [ ! -d "/home/developer/HostShare" ]; then
-    echo "Creating host share directory (HostShare)"
-    mkdir /home/developer/HostShare
-    chown developer:developer /home/developer/HostShare
-else
-    echo "HostShare directory appears to have previously been created (skipping)"
-fi
+    echo "Function: CreateHostShareDirectory"
+    if [ ! -d "/home/developer/HostShare" ]; then
+        echo "Creating host share directory (HostShare)"
+        mkdir /home/developer/HostShare
+        chown developer:developer /home/developer/HostShare
+    else
+        echo "HostShare directory appears to have previously been created (skipping)"
+    fi
 }
 # End of share directory creation
 # ------------------------------------------------------------------------
@@ -158,45 +157,45 @@ function InstallCPPUnit
 {
 echo "Function: InstallCPPUnit"
 
-if [ -f /usr/local/lib/libcppunit.so ]; then
+    if [ -f /usr/local/lib/libcppunit.so ]; then
     echo "CPPUnit library file already exists (skipping build/config of CPPUnit)"
-else
-    echo "CPPUnit library file does not exist, performing installation"
-
-    # As with installing Python, create a projects directory then move into it
-    mkdir projects
-    cd projects
-
-    # CPPUnit source is kept in Subversion, check it out from:
-    svn checkout https://10.17.20.6:18080/svn/tools/tools/cppunit/trunk cppunit
-
-    cd cppunit
-
-    # This command is required to correct a configuration error in the CPPUnit source package
-    # (./configure would fail because it was not executable)
-    chmod u+x configure
-
-    # These steps configure, build, test then install CPPUnit
-    ./autogen.sh
-    ./configure
-    make
-    make check
-    make install
-
-    # Clean up after build & install process
-    cd
-    rm -Rf projects
-
-    # Make entry in developer/.bash_profile for location of cppunit library (if not already there)
-    if grep -q LD_LIBRARY_PATH /home/developer/.bash_profile; then
-        echo "LD_LIBRARY_PATH entry already exists in /home/developer/.bash_profile (skipping)"
     else
-        echo "Adding LD_LIBRARY_PATH entry to /home/developer/.bash_profile"
-        echo '' >> /home/developer/.bash_profile
-        echo 'LD_LIBRARY_PATH=/usr/local/lib' >> /home/developer/.bash_profile
-        echo 'export LD_LIBRARY_PATH' >> /home/developer/.bash_profile
+        echo "CPPUnit library file does not exist, performing installation"
+
+        # As with installing Python, create a projects directory then move into it
+        mkdir projects
+        cd projects
+
+        # CPPUnit source is kept in Subversion, check it out from:
+        svn checkout https://10.17.20.6:18080/svn/tools/tools/cppunit/trunk cppunit
+
+        cd cppunit
+
+        # This command is required to correct a configuration error in the CPPUnit source package
+        # (./configure would fail because it was not executable)
+        chmod u+x configure
+
+        # These steps configure, build, test then install CPPUnit
+        ./autogen.sh
+        ./configure
+        make
+        make check
+        make install
+
+        # Clean up after build & install process
+        cd
+        rm -Rf projects
+
+        # Make entry in developer/.bash_profile for location of cppunit library (if not already there)
+        if grep -q LD_LIBRARY_PATH /home/developer/.bash_profile; then
+            echo "LD_LIBRARY_PATH entry already exists in /home/developer/.bash_profile (skipping)"
+        else
+            echo "Adding LD_LIBRARY_PATH entry to /home/developer/.bash_profile"
+            echo '' >> /home/developer/.bash_profile
+            echo 'LD_LIBRARY_PATH=/usr/local/lib' >> /home/developer/.bash_profile
+            echo 'export LD_LIBRARY_PATH' >> /home/developer/.bash_profile
+        fi
     fi
-fi
 }
 # End of CPPUnit installation section
 # ------------------------------------------------------------------------
@@ -207,26 +206,26 @@ function InstallSonarScanner
 {
 echo "Function: InstallSonarScanner"
 
-if [ -f /opt/sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties ]; then
-    echo "Sonar Scanner (configuration file) already exists (skipping)"
-else
+    if [ -f /opt/sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties ]; then
+        echo "Sonar Scanner (configuration file) already exists (skipping)"
+    else
     wget ${SONAR_SCANNER} --directory-prefix /opt
-    cd /opt
-    unzip sonar-scanner-cli-3.0.1.733-linux.zip
-    chown -R developer:root sonar-scanner-3.0.1.733-linux
+        cd /opt
+        unzip sonar-scanner-cli-3.0.1.733-linux.zip
+        chown -R developer:root sonar-scanner-3.0.1.733-linux
 
-    # Add URL of sonarqube server below their example line
-    sed -i '/sonar.host.url/ a sonar.host.url=http://sonarqube:9000' sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties
+        # Add URL of sonarqube server below their example line
+        sed -i '/sonar.host.url/ a sonar.host.url=http://sonarqube:9000' sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties
 
-    # Add source encoding definition line below their example
-    sed -i '/sonar.sourceEncoding/ a sonar.sourceEncoding=ISO8859-1' sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties
+        # Add source encoding definition line below their example
+        sed -i '/sonar.sourceEncoding/ a sonar.sourceEncoding=ISO8859-1' sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties
 
-    rm sonar-scanner-cli-3.0.1.733-linux.zip
-    cd
+        rm sonar-scanner-cli-3.0.1.733-linux.zip
+        cd
 
-    # Add an alias for the honkin' long scanner path/command
-    echo 'alias sonarscan="/opt/sonar-scanner-3.0.1.733-linux/bin/sonar-scanner"' >> /home/developer/.bashrc  
-fi
+        # Add an alias for the honkin' long scanner path/command
+        echo 'alias sonarscan="/opt/sonar-scanner-3.0.1.733-linux/bin/sonar-scanner"' >> /home/developer/.bashrc  
+    fi
 }
 # End of Sonar Scanner configuration section
 # ------------------------------------------------------------------------
@@ -310,10 +309,6 @@ function InstallLaTeX
 
     # The following will need some interaction because it asks for settings
     ./install-tl
-
-
-
-
 
     cd ..
     rm -Rf projects
@@ -420,8 +415,6 @@ make
 # ------------------------------------------------------------------------
 
 
-
-
 # ====================================================================================
 # ====================================================================================
 # ====================================================================================
@@ -436,7 +429,6 @@ make
 #        script runs)
 systemctl stop packagekit
 
-# SetBiomerieuxProxy
 InstallAdditionalRepositories      # Enables the EPEL repository and installs DKMS (for virtualization support)
 # InstallDKMS
 # DisableSELinux
@@ -451,6 +443,5 @@ InstallPythonExtensions
 # InstallSqliteStudio
 # InstallSlickEdit
 # InstallLaTeX
-# AddBiomerieuxHostNames
 AddLocalHostNames
 
