@@ -11,8 +11,8 @@ PY34_SOURCE=${APPLICATION_SERVER_URL}/Python/3.4.4/Python-3.4.4.tgz
 SONAR_SCANNER=${APPLICATION_SERVER_URL}/ServerApplications/sonar-scanner-cli-3.0.1.733-linux.zip
 
 # SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/se_22000201_installed.tar.gz
-# Define the name of the tar file so that it can be reused way down below
-SE_TAR=se_24000003_linux64_beta2.tar.gz
+# Define the base name of the tar file so that it can be reused way down below
+SLICK_EDIT=se_24000008_linux64.tar.gz
 SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
 
 ##########################################################################
@@ -22,7 +22,7 @@ function InstallEpelRepository
 {
     echo "Function: InstallEpelRepository"
     
-    # Use this command from: https://wiki.centos.org/AdditionalResources/Repositories
+    # Use this command, from: https://wiki.centos.org/AdditionalResources/Repositories
     yum --enablerepos=extras install -y epel-release
 }
 
@@ -57,9 +57,9 @@ function InstallFilezilla
 # The second line here keeps it disabled after reboots
 function DisableSELinux
 {
-echo "Function: DisableSELinux"
-setenforce 0
-echo "SELINUX=disabled" > /etc/selinux/config
+    echo "Function: DisableSELinux"
+    setenforce 0
+    echo "SELINUX=disabled" > /etc/selinux/config
 }
 # ------------------------------------------------------------------------
 
@@ -150,16 +150,16 @@ fi
 # Items previously installed will be skipped
 function InstallPythonExtensions
 {
-echo "Function: InstallPythonExtensions"
+    echo "Function: InstallPythonExtensions"
 
-# The no proxy version
-/usr/local/bin/pip3.4 install --upgrade pip setuptools
-/usr/local/bin/pip3.4 install numpy
-/usr/local/bin/pip3.4 install matplotlib
-/usr/local/bin/pip3.4 install cython
-/usr/local/bin/pip3.4 install pexpect
-/usr/local/bin/pip3.4 install robotframework
-/usr/local/bin/pip3.4 install pyusb
+    # The no proxy version
+    /usr/local/bin/pip3.4 install --upgrade pip setuptools
+    /usr/local/bin/pip3.4 install numpy
+    /usr/local/bin/pip3.4 install matplotlib
+    /usr/local/bin/pip3.4 install cython
+    /usr/local/bin/pip3.4 install pexpect
+    /usr/local/bin/pip3.4 install robotframework
+    /usr/local/bin/pip3.4 install pyusb
 }
 # End of Python extension library installation section
 # ------------------------------------------------------------------------
@@ -271,31 +271,62 @@ function InstallSlickEdit
 {
 echo "Function: InstallSlickEdit"
 
-if [ ! -d "/opt/slickedit-pro2019" ]; then
+if [ ! -f "/opt/${SLICK_EDIT}" ]; then
     echo "Downloading & extracting SlickEdit package"
     wget ${SLICK_EDIT_URL} --directory-prefix /opt
     cd /opt
-    tar -xvf se_22000201_installed.tar.gz
-
-    rm se_22000201_installed.tar.gz
+    tar -xvf ${SLICK_EDIT} 
+    
+    # TODO - Consider pulling the license file while you're here
+    
     cd
 
 else
     echo "SlickEdit directory appears to have previously been created (skipping)"
 fi
 
-## Make entry in developer/.bash_profile for SlickEdit License Server (if not already there)
-#if grep -q SLICKEDIT_LICENSE_SERVER /home/developer/.bash_profile; then
-#    echo "SLICKEDIT_LICENSE_SERVER entry already exists in /home/developer/.bash_profile (skipping)"
-#else
-#    echo "Adding SLICKEDIT_LICENSE_SERVER entry to /home/developer/.bash_profile"
-#    echo '' >> /home/developer/.bash_profile
-#    echo 'SLICKEDIT_LICENSE_SERVER=27100@usstllic01' >> /home/developer/.bash_profile
-#    echo 'export SLICKEDIT_LICENSE_SERVER' >> /home/developer/.bash_profile
-#fi
-
 }
 # End of SlickEdit creation
+# ------------------------------------------------------------------------
+
+##########################################################################
+# Install Mingw32 (For building Windows applications on Linux) 
+# Tutorial: https://fedoraproject.org/wiki/MinGW/Tutorial
+# Core Utilities code: https://usstlsvn02:18080/svn/vendor/GNU/coreutils
+# See: build-aux/gen-lists-of-programs.sh
+function InstallMingw32
+{
+yum -y install mingw32-gcc mingw32-libxml2 mingw32-minizip mingw32-libwebp 
+yum -y install mingw32-pdcurses mingw32-gcc-c++
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
+# Install the repository surgeon tool (located by Ryan Danner) 
+# 
+# http://www.catb.org/esr/reposurgeon/ 
+# 
+function InstallRepoSurgeon
+{
+# Install some necessary extras
+yum -y install asciidoc golang pypy xmlto
+
+# Download the code
+git clone https://gitlab.com/esr/reposurgeon.git /opt/reposurgeon
+
+# Build it
+cd /opt/reposurgeon
+make gosetup
+make
+
+cd ~
+
+# Make links to usr/bin 
+ln -s /opt/reposurgeon/repotool /usr/bin/repotool 
+ln -s /opt/reposurgeon/repocutter /usr/bin/repocutter 
+ln -s /opt/reposurgeon/repomapper /usr/bin/repomapper 
+ln -s /opt/reposurgeon/reposurgeon /usr/bin/reposurgeon
+}
 # ------------------------------------------------------------------------
 
 ##########################################################################
@@ -409,21 +440,23 @@ fi
 # Install Sqlite Studio 
 # https://github.com/pawelsalawa/sqlitestudio/wiki/Instructions_for_compilation_under_Linux#what-you-need 
 # https://jdhao.github.io/2017/09/04/install-gcc-newer-version-on-centos/
+#
+# TODO - Seems this wasn't succeeding on last attempt
 function InstallSqliteStudio
 {
-yum -y install sqlite
-yum -y install qt5-qtbase-devel
+    yum -y install sqlite
+    yum -y install qt5-qtbase-devel
 
-# This clone operation creates the sqlitestudio directory with the code
-git clone https://github.com/pawelsalawa/sqlitestudio.git
+    # This clone operation creates the sqlitestudio directory with the code
+    git clone https://github.com/pawelsalawa/sqlitestudio.git
 
-mkdir sqlitestudio/output
-mkdir sqlitestudio/output/build
+    mkdir sqlitestudio/output
+    mkdir sqlitestudio/output/build
 
-cd sqlitestudio/output/build
+    cd sqlitestudio/output/build
 
-/usr/lib64//qt5/bin/qmake ../../SQLiteStudio3
-make
+    /usr/lib64//qt5/bin/qmake ../../SQLiteStudio3
+    make
 
 }
 # ------------------------------------------------------------------------
@@ -438,15 +471,14 @@ make
 # ====================================================================================
 
 ##########################################################################
-# NOTE - First must stop PackageKit or you will hang forever since it requires
-#        the yum proxy to have been set previously (which is not done until this 
-#        script runs)
+# NOTE - First must stop PackageKit or you will hang until it times out
+#        which is a really, really long time.
 systemctl stop packagekit
 
 # Note that installing EPEL seems to work best BEFORE updating
 InstallEpelRepository      # Enables the EPEL repository 
 # InstallDKMS                # REQUIRES EPSL Repository Installs DKMS (for virtualization support)
-# InstallFilezilla           # REQUIRES EPSL Repository Installs FileZilla
+InstallFilezilla           # REQUIRES EPSL Repository Installs FileZilla
 
 # DisableSELinux
 PerformUpdate
@@ -454,11 +486,13 @@ InstallDevelopmentApplications
 # CreateHostShareDirectory
 InstallPython34
 InstallPythonExtensions
-# InstallCPPUnit
-# InstallSonarScanner
-# InstallGoogleChrome
-# InstallSqliteStudio
-# InstallSlickEdit
-# InstallLaTeX
+InstallCPPUnit
+InstallSonarScanner
+InstallGoogleChrome
+InstallMingw32
+InstallSqliteStudio
+InstallSlickEdit
 AddLocalHostNames
 
+# InstallRepoSurgeon
+# InstallLaTeX
