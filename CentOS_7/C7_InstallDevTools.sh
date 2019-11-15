@@ -10,20 +10,24 @@ PY34_SOURCE=${APPLICATION_SERVER_URL}/Python/3.4.4/Python-3.4.4.tgz
 # SONAR_SCANNER=${APPLICATION_SERVER_URL}/SonarQube/sonar-scanner-cli-3.0.1.733-linux.zip
 SONAR_SCANNER=${APPLICATION_SERVER_URL}/ServerApplications/sonar-scanner-cli-3.0.1.733-linux.zip
 
-# SLICK_EDIT=${APPLICATION_SERVER_URL}/SlickEdit/Linux/se_22000201_installed.tar.gz
+# SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/se_22000201_installed.tar.gz
 # Define the name of the tar file so that it can be reused way down below
 SE_TAR=se_24000003_linux64_beta2.tar.gz
-SLICK_EDIT=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
+SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
 
 ##########################################################################
 # Install additional repositories to assist with virtualization support
 # For more information: https://fedoraproject.org/wiki/EPEL
-function InstallAdditionalRepositories
+function InstallEpelRepository
 {
-    echo "Function: InstallAdditionalRepositories"
-    yum -y install epel-release
+    echo "Function: InstallEpelRepository"
+    
+    # Use this command from: https://wiki.centos.org/AdditionalResources/Repositories
+    yum --enablerepos=extras install -y epel-release
 }
 
+##########################################################################
+# Normal update...
 function PerformUpdate
 {
     yum -y update
@@ -36,6 +40,15 @@ function InstallDKMS
 {
     echo "Function: InstallDKMS"
     yum -y --enablerepo=epel install dkms
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
+# Install Dynamic Kernel Module Support (Mandatory for VBox Guest Additions, helpful for VMware)
+function InstallFilezilla
+{
+    echo "Function: InstallFilezilla"
+    yum -y --enablerepo=epel install filezilla
 }
 # ------------------------------------------------------------------------
 
@@ -253,14 +266,14 @@ fi
 # ------------------------------------------------------------------------
 
 ##########################################################################
-# Install SlickEdit 2017
+# Install SlickEdit
 function InstallSlickEdit
 {
 echo "Function: InstallSlickEdit"
 
-if [ ! -d "/opt/slickedit-pro2017" ]; then
+if [ ! -d "/opt/slickedit-pro2019" ]; then
     echo "Downloading & extracting SlickEdit package"
-    wget ${SLICK_EDIT} --directory-prefix /opt
+    wget ${SLICK_EDIT_URL} --directory-prefix /opt
     cd /opt
     tar -xvf se_22000201_installed.tar.gz
 
@@ -271,15 +284,16 @@ else
     echo "SlickEdit directory appears to have previously been created (skipping)"
 fi
 
-# Make entry in developer/.bash_profile for SlickEdit License Server (if not already there)
-if grep -q SLICKEDIT_LICENSE_SERVER /home/developer/.bash_profile; then
-    echo "SLICKEDIT_LICENSE_SERVER entry already exists in /home/developer/.bash_profile (skipping)"
-else
-    echo "Adding SLICKEDIT_LICENSE_SERVER entry to /home/developer/.bash_profile"
-    echo '' >> /home/developer/.bash_profile
-    echo 'SLICKEDIT_LICENSE_SERVER=27100@usstllic01' >> /home/developer/.bash_profile
-    echo 'export SLICKEDIT_LICENSE_SERVER' >> /home/developer/.bash_profile
-fi
+## Make entry in developer/.bash_profile for SlickEdit License Server (if not already there)
+#if grep -q SLICKEDIT_LICENSE_SERVER /home/developer/.bash_profile; then
+#    echo "SLICKEDIT_LICENSE_SERVER entry already exists in /home/developer/.bash_profile (skipping)"
+#else
+#    echo "Adding SLICKEDIT_LICENSE_SERVER entry to /home/developer/.bash_profile"
+#    echo '' >> /home/developer/.bash_profile
+#    echo 'SLICKEDIT_LICENSE_SERVER=27100@usstllic01' >> /home/developer/.bash_profile
+#    echo 'export SLICKEDIT_LICENSE_SERVER' >> /home/developer/.bash_profile
+#fi
+
 }
 # End of SlickEdit creation
 # ------------------------------------------------------------------------
@@ -429,8 +443,11 @@ make
 #        script runs)
 systemctl stop packagekit
 
-InstallAdditionalRepositories      # Enables the EPEL repository and installs DKMS (for virtualization support)
-# InstallDKMS
+# Note that installing EPEL seems to work best BEFORE updating
+InstallEpelRepository      # Enables the EPEL repository 
+# InstallDKMS                # REQUIRES EPSL Repository Installs DKMS (for virtualization support)
+# InstallFilezilla           # REQUIRES EPSL Repository Installs FileZilla
+
 # DisableSELinux
 PerformUpdate
 InstallDevelopmentApplications
