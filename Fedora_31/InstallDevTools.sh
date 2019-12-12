@@ -81,8 +81,9 @@ function PrepareSlickEdit
 # 
 function InstallRepoSurgeon
 {
-# Install some necessary extras
-dnf install -y asciidoc golang pypy xmlto
+# Install some necessary extras (golang installed separately due to slow download speeds)
+dnf install -y asciidoc pypy xmlto
+dnf install -y golang
 
 # Download the code
 git clone https://gitlab.com/esr/reposurgeon.git /opt/reposurgeon
