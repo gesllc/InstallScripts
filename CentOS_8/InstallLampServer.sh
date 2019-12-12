@@ -30,31 +30,6 @@ function InstallBasicPackages
 
 ##########################################################################
 #
-function ServerSetup
-{
-    echo "Function: ServerSetup starting"
-
-    adduser webadmin
-    gpasswd -a webadmin wheel
-
-    # NOTE: The following command will list additional service names
-    #firewall-cmd --get-services
-
-    firewall-cmd --permanent --zone=public --add-service=ssh
-
-    # List all firewall settings
-    firewall-cmd --permanent --list-all
-
-    # Reload firewall, and make active on reboots
-    firewall-cmd --reload
-    systemctl enable firewalld
-
-    echo "Function: ServerSetup complete"
-}
-# ------------------------------------------------------------------------
-
-##########################################################################
-#
 function AddLocalHostNames
 {
     echo "Function: AddLocalHostnames starting"
@@ -232,7 +207,7 @@ function InstallPhp
     # Now install PHP 7.3
     yum-config-manager --enable remi-php73
     yum -y install php php-opcache
-
+    
     # And restart Apache to apply the changes
     systemctl restart httpd
 
@@ -240,7 +215,10 @@ function InstallPhp
     echo "<?php phpinfo(); ?>" >> /var/www/html/info.php
 
     # Add other PHP modules as needed (desired?) - yum search php
-    yum -y install php-mysqlnd php-pdo
+    yum -y install php-mysqlnd php-pdo php-pecl-zip php-common php-fpm php-cli
+    
+    # This group supports phpMyAdmin
+    yum -y install php-json php-mbstring 
 
     # This group supports Wordpress, Joomla & Drupal
     yum -y install php-gd php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-soap curl curl-devel
@@ -301,16 +279,17 @@ function InstallPhpMyAdmin
 # ====================================================================================
 
 InstallBasicPackages
-# ServerSetup  # Will probably remove this function - don't think its needed
+
 AddLocalHostNames
 InstallApache
 
 # InstallEncryptClient   # NOTE: these two are mutually exclusive
-InstallSelfSignedCertificate
+# InstallSelfSignedCertificate
 
 InstallDataBase
 InstallPhp
-InstallPhpMyAdmin
+
+# InstallPhpMyAdmin
 
 
 
