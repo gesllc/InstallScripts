@@ -3,6 +3,7 @@
 	<Projects>
 		<Project File="CentOS_6/Centos_6.vpj"/>
 		<Project File="CentOS_7/Centos_7.vpj"/>
+		<Project File="Fedora_31/Fedora_31.vpj"/>
 		<Project File="LinuxMint/LinuxMint.vpj"/>
 	</Projects>
 </Workspace>
