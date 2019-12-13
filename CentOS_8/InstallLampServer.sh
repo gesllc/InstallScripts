@@ -23,6 +23,12 @@ function InstallBasicPackages
 
     rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
     yum -y install epel-release
+    
+    # The following line is not specifically required, but will show you what package
+    # is required to install semanage (for SELinux configuration).
+    # It tells you that you need policycoreutils-python-utils
+    yum whatprovides semanage
+    yum install -y policycoreutils-python-utils
 
     echo "Function: InstallBasicPackages complete"
 }
@@ -156,19 +162,28 @@ function InstallApache
 {
     echo "Function: InstallApache starting"
 
-    yum -y install httpd openssl mod_ssl
+    # yum -y install httpd openssl mod_ssl
+    yum -y install @httpd
 
-    systemctl start httpd
-    systemctl enable httpd
+    # systemctl start httpd
+    systemctl enable --now httpd.service
 
     # Open firewall for http and https
     firewall-cmd --permanent --zone=public --add-service=http
     firewall-cmd --permanent --zone=public --add-service=https
     firewall-cmd --reload
 
-    echo "<h1>Hello Internet World!!</h1>" >> /var/www/html/index.html
+    echo "<h1>Hello Internet World! This is your CentOS_8 Apache web server</h1>" >> /var/www/html/index.html
 
+    # The following shows the status of httpd.service
+    systemctl is-enabled httpd.service
+    
     echo "Function: InstallApache complete"
+    
+    # Configuration notes
+    # Load SSL modules in httpd.conf per examples below
+    # See: https://computingforgeeks.com/install-apache-with-ssl-http2-on-rhel-centos/   
+    
 }
 # ------------------------------------------------------------------------
 
@@ -184,11 +199,16 @@ function InstallDataBase
     systemctl start mariadb
     systemctl enable mariadb
 
-    # NOTE - Must run mysql_secure_installation
-    #        to set MySQL root password, etc.
-
+    # The following displays version information for MariaDB
+    rpm -qi mariadb-server
+    
     echo "Function: InstallDataBase complete"
-}
+    
+    # Configuration notes
+    # Must run mysql_secure_installation to set MySQL root password, etc.
+    # See: https://computingforgeeks.com/how-to-install-mariadb-database-server-on-rhel-8/
+ 
+ }
 # ------------------------------------------------------------------------
 
 ##########################################################################
@@ -223,9 +243,6 @@ function InstallPhp
     # This group supports Wordpress, Joomla & Drupal
     yum -y install php-gd php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-soap curl curl-devel
 
-    # And restart Apache to apply changes from installing additional modules
-    systemctl restart httpd
-
     echo "Function: InstallPhp complete"
 }
 # ------------------------------------------------------------------------
@@ -241,9 +258,73 @@ function InstallPhp
 function InstallPhpMyAdmin
 {
     echo "Function: InstallPhpMyAdmin starting"
+    
+    yum -y install php-mysqlnd
+    # yum -y install phpMyAdmin
+    
+    # Declare the PhpMyAdmin version desired
+    export VER="4.9.1"
+    
+    # Download the version specified above, then extract and relocate
+    curl -o phpMyAdmin-${VER}-english.tar.gz  https://files.phpmyadmin.net/phpMyAdmin/${VER}/phpMyAdmin-${VER}-english.tar.gz
+    tar xvf phpMyAdmin-${VER}-english.tar.gz
+    rm phpMyAdmin-*.tar.gz
+    mv phpMyAdmin-* /usr/share/phpmyadmin
+    
+    # Create structure needed by phpMyAdmin
+    mkdir -p /var/lib/phpmyadmin/tmp
+    chown -R apache:apache /var/lib/phpmyadmin
+    
+    mkdir /etc/phpmyadmin/
+    cp /usr/share/phpmyadmin/config.sample.inc.php  /usr/share/phpmyadmin/config.inc.php
+    
+    # Edit /usr/share/phpmyadmin/config.inc.php
+    # Set a secret passphrase - NOTE must be 32 chars long
+    # $cfg['blowfish_secret'] = 'H2OxcGXxflSd8JwrwVlh6KW6s2rER63i';
+    
+    # Configure the Temp directory to use /var/lib/phpmyadmin/tmp (created above)
+    # Add the following line after the SaveDir entry
+    # $cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
+    
+    # Now create & edit /etc/httpd/conf.d/phpmyadmin.conf with the content:
+    
+    ## Apache configuration for phpMyAdmin
+    # Alias /phpMyAdmin /usr/share/phpmyadmin/
+    #Alias /phpmyadmin /usr/share/phpmyadmin/
+ 
+    #<Directory /usr/share/phpmyadmin/>
+    #    AddDefaultCharset UTF-8
+ 
+    #    <IfModule mod_authz_core.c>
+    #         # Apache 2.4
+    #         Require all granted
+    #       </IfModule>
+    #       <IfModule !mod_authz_core.c>
+    #         # Apache 2.2
+    #         Order Deny,Allow
+    #         Deny from All
+    #         Allow from 127.0.0.1
+    #         Allow from ::1
+    #       </IfModule>
+    #    </Directory>
+    
+    # Validate Apache configuration - must report 'Syntax OK'
+    apachectl configtest
+    
+    # Restart httpd
+    systemctl restart httpd
+    
+    # Set SELinux to allow access to phpMyAdmin page
+    semanage fcontext -a -t httpd_sys_content_t "/usr/share/phpmyadmin(/.*)?"
+    restorecon -Rv /usr/share/phpmyadmin
+    
+    # Firewall settings - configured elsewhere in this script as well
+    # TODO - Research what is really needed and add a function to add them in a single place
+    #        after everything is installed
+    # firewall-cmd --add-service=http --permanent
+    # firewall-cmd --reload
 
-    yum -y install phpMyAdmin
-        
+# OLD notes follow
     # Edit /etc/httpd/conf.d/phpMyAdmin.conf
     # Comment all instances of Require ip 127.0.0.1
     # Comment all instances of Require ip ::1
@@ -259,13 +340,15 @@ function InstallPhpMyAdmin
     # flush privileges;
     # quit;
     # Then restart Apache ...
-        
-    systemctl restart httpd
     
-    # Access PhpMyAdmin using: http://<hostname>/phpmyadmin
-    # Log in using root password set above.
-
     echo "Function: InstallPhpMyAdmin complete"
+    
+    # Configuration notes
+    # phpMyAdmin web interface should be available:
+    # http://<hostname>/phpmyadmin
+    #
+    # The login screen should display.
+    # Log in using your database credentials - username & password
 }
 # ------------------------------------------------------------------------
 
@@ -280,18 +363,17 @@ function InstallPhpMyAdmin
 
 InstallBasicPackages
 
+
 AddLocalHostNames
+
+InstallPhp
+InstallDataBase
 InstallApache
 
 # InstallEncryptClient   # NOTE: these two are mutually exclusive
 # InstallSelfSignedCertificate
 
-InstallDataBase
-InstallPhp
-
-# InstallPhpMyAdmin
-
-
+InstallPhpMyAdmin
 
 # The following is still a work in progress....
 
