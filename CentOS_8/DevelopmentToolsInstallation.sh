@@ -267,9 +267,9 @@ fi
 
 ##########################################################################
 # Install SlickEdit
-function InstallSlickEdit
+function PrepareSlickEdit
 {
-echo "Function: InstallSlickEdit"
+echo "Function: PrepareSlickEdit"
 
 if [ ! -f "/opt/${SLICK_EDIT}" ]; then
     echo "Downloading & extracting SlickEdit package"
@@ -300,68 +300,6 @@ yum -y install mingw32-gcc mingw32-libxml2 mingw32-minizip mingw32-libwebp
 yum -y install mingw32-pdcurses mingw32-gcc-c++
 }
 # ------------------------------------------------------------------------
-
-##########################################################################
-# Install the repository surgeon tool (located by Ryan Danner) 
-# 
-# http://www.catb.org/esr/reposurgeon/ 
-# 
-function InstallRepoSurgeon
-{
-# Install some necessary extras
-yum -y install asciidoc golang pypy xmlto
-
-# Download the code
-git clone https://gitlab.com/esr/reposurgeon.git /opt/reposurgeon
-
-# Build it
-cd /opt/reposurgeon
-make gosetup
-make
-
-cd ~
-
-# Make links to usr/bin 
-ln -s /opt/reposurgeon/repotool /usr/bin/repotool 
-ln -s /opt/reposurgeon/repocutter /usr/bin/repocutter 
-ln -s /opt/reposurgeon/repomapper /usr/bin/repomapper 
-ln -s /opt/reposurgeon/reposurgeon /usr/bin/reposurgeon
-}
-# ------------------------------------------------------------------------
-
-##########################################################################
-# Install the LaTeX document generation tool set
-# https://www.systutorials.com/241660/how-to-install-tex-live-on-centos-7-linux/
-function InstallLaTeX
-{
-
-    # Uninstall old version first
-    yum -y erase texlive texlive*
-
-    # Install dependencies 
-    yum -y install perl-Digest-MD5
-
-    LATEX_NAME=install-tl-unx.tar.gz
-    LATEX_URL=${PACKAGE_SERVER_URL}/${LATEX_NAME}
-
-    mkdir projects
-    cd projects
-
-    # Use wget to pull the Python package
-    wget ${LATEX_URL}
-    tar -xvf ${LATEX_NAME}
-    cd install-tl*
-
-    # The following will need some interaction because it asks for settings
-    ./install-tl
-
-    cd ..
-    rm -Rf projects
-
-}
-# LaTeX installation finished
-# ------------------------------------------------------------------------
-
 
 ##########################################################################
 # Add static ip addresses to /etc/hosts to allow hostnames instead of only IPs
@@ -484,15 +422,13 @@ InstallFilezilla           # REQUIRES EPSL Repository Installs FileZilla
 PerformUpdate
 InstallDevelopmentApplications
 # CreateHostShareDirectory
-InstallPython34
-InstallPythonExtensions
-InstallCPPUnit
-InstallSonarScanner
-InstallGoogleChrome
-InstallMingw32
-InstallSqliteStudio
-InstallSlickEdit
-AddLocalHostNames
+# InstallPython34
+# InstallPythonExtensions
+# InstallCPPUnit
+# InstallSonarScanner
+# InstallGoogleChrome
+# InstallMingw32
+# InstallSqliteStudio
+# PrepareSlickEdit
+# AddLocalHostNames
 
-# InstallRepoSurgeon
-# InstallLaTeX

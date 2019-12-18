@@ -83,5 +83,8 @@
     </Config>
     <Files AutoFolders="DirectoryView">
         <F N="InstallDevTools.sh"/>
+        <F N="LaTeXInstallation.sh"/>
+        <F N="README.md"/>
+        <F N="RepoSurgeonInstallation.sh"/>
     </Files>
 </Project>
