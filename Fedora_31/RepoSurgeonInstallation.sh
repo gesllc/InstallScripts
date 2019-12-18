@@ -8,15 +8,15 @@
 function InstallRepoSurgeon
 {
 # Install some necessary extras (golang installed separately due to slow download speeds)
-dnf install -y asciidoc pypy xmlto
-dnf install -y golang
+dnf install -y asciidoctor subversion mercurial
+dnf install -7 golang
 
 # Download the code
 git clone https://gitlab.com/esr/reposurgeon.git /opt/reposurgeon
 
 # Build it
 cd /opt/reposurgeon
-make gosetup
+make get
 make
 
 cd ~
@@ -38,10 +38,7 @@ ln -s /opt/reposurgeon/reposurgeon /usr/bin/reposurgeon
 # ====================================================================================
 
 ##########################################################################
-# NOTE - First must stop PackageKit or you will hang forever since it requires
-#        the yum proxy to have been set previously (which is not done until this 
-#        script runs)
+# NOTE - First must stop PackageKit or you will hang forever
 systemctl stop packagekit
 
 InstallRepoSurgeon
-
