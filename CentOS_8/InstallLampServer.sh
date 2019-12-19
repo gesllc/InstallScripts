@@ -253,7 +253,7 @@ function InstallPhpMyAdmin
     echo 'Alias /phpMyAdmin /usr/share/phpmyadmin/' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo 'Alias /phpmyadmin /usr/share/phpmyadmin/' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '' >> /etc/httpd/conf.d/phpmyadmin.conf
-    echo 'Directory /usr/share/phpmyadmin/>' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '<Directory /usr/share/phpmyadmin/>' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '    AddDefaultCharset UTF-8' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '    <IfModule mod_authz_core.c>' >> /etc/httpd/conf.d/phpmyadmin.conf
@@ -267,7 +267,7 @@ function InstallPhpMyAdmin
     echo '        Allow from 127.0.0.1' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '        Allow from ::1' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '    </IfModule>' >> /etc/httpd/conf.d/phpmyadmin.conf
-    echo '    </Directory>' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '</Directory>' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '' >> /etc/httpd/conf.d/phpmyadmin.conf
     
     # Validate Apache configuration - must report 'Syntax OK'
