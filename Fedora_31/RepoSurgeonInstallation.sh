@@ -9,7 +9,7 @@ function InstallRepoSurgeon
 {
 # Install some necessary extras (golang installed separately due to slow download speeds)
 dnf install -y asciidoctor subversion mercurial
-dnf install -7 golang
+dnf install -y golang
 
 # Download the code
 git clone https://gitlab.com/esr/reposurgeon.git /opt/reposurgeon
@@ -42,3 +42,4 @@ ln -s /opt/reposurgeon/reposurgeon /usr/bin/reposurgeon
 systemctl stop packagekit
 
 InstallRepoSurgeon
+
