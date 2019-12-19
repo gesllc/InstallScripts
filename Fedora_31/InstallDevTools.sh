@@ -11,9 +11,23 @@ function SetBiomerieuxProxy
 {
     if grep -q proxy /etc/dnf/dnf.conf; then
         echo "dnf.conf proxy appears to have previously been set (skipping)"
+        sleep 5
     else
         sed -i '/\[main\]/ a proxy=http://10.155.1.10:80' /etc/dnf/dnf.conf
     fi
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
+function RemoveUnwantedPackages
+{
+    dnf remove -y brasero*
+    dnf remove -y libreoffice*
+    dnf remove -y mariadb*
+    dnf remove -y rhythmbox*
+
+    # Remove any packages that were dependencies of those removed above
+    dnf autoremove -y
 }
 # ------------------------------------------------------------------------
 
@@ -27,6 +41,7 @@ function InstallDevelopmentApplications
     dnf install -y git
     dnf install -y perl
     dnf install -y gedit
+    dnf install -y nano
     dnf install -y wget
 
     dnf install -y "Development Tools"
@@ -83,9 +98,12 @@ function PrepareSlickEdit
 #        the yum proxy to have been set previously (which is not done until this 
 #        script runs)
 systemctl stop packagekit
-dnf -y update
 
 SetBiomerieuxProxy               # Need to modify for dnf proxy configuration
+
+RemoveUnwantedPackages
+dnf -y update
+
 InstallDevelopmentApplications
 
 PrepareSlickEdit

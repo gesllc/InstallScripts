@@ -472,14 +472,14 @@ InstallFilezilla           # REQUIRES EPSL Repository Installs FileZilla
 PerformUpdate
 InstallDevelopmentApplications
 # CreateHostShareDirectory
-# InstallPython34
-# InstallPythonExtensions
-# InstallCPPUnit
+InstallPython34
+InstallPythonExtensions
+InstallCPPUnit
 InstallSonarScanner
-# InstallGoogleChrome
+InstallGoogleChrome
 InstallMingw32
 # InstallSqliteStudio
-# PrepareSlickEdit
-# AddLocalHostNames
-AddBioMerieuxHostNames
+PrepareSlickEdit
+AddLocalHostNames
+# AddBioMerieuxHostNames
 
