@@ -8,7 +8,8 @@
 function InstallRepoSurgeon
 {
 # Install some necessary extras (golang installed separately due to slow download speeds)
-dnf install -y asciidoctor subversion mercurial
+dnf install -y asciidoctor subversion mercurial 
+dnf install -y make    # Needed if other development tools were not already installed
 dnf install -y golang
 
 # Download the code
