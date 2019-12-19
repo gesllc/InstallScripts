@@ -5,11 +5,13 @@
 # Install the repository surgeon tool (located by Ryan Danner) 
 # 
 # http://www.catb.org/esr/reposurgeon/ 
+# Installation Instructions: https://gitlab.com/esr/reposurgeon/blob/master/INSTALL.adoc
 # 
 function InstallRepoSurgeon
 {
 # Install some necessary extras (golang installed separately due to slow download speeds)
-dnf install -y asciidoc pypy xmlto
+# dnf install -y asciidoc pypy xmlto
+dnf install -y asciidoctor subversion mercurial
 dnf install -y golang
 
 # Download the code
@@ -17,7 +19,8 @@ git clone https://gitlab.com/esr/reposurgeon.git /opt/reposurgeon
 
 # Build it
 cd /opt/reposurgeon
-make gosetup
+# make gosetup
+make get
 make
 
 cd ~

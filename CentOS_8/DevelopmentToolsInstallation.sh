@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define parameters that may change over time....
-# APPLICATION_SERVER_URL=http://10.17.20.62/Applications
-APPLICATION_SERVER_URL=http://10.1.1.26/Applications
+APPLICATION_SERVER_URL=http://10.17.20.62/Applications
+# APPLICATION_SERVER_URL=http://10.1.1.26/Applications
 
 # List of things that are downloaded from internal server
 PY34_SOURCE=${APPLICATION_SERVER_URL}/Python/3.4.4/Python-3.4.4.tgz
@@ -13,7 +13,7 @@ SONAR_SCANNER=${APPLICATION_SERVER_URL}/ServerApplications/sonar-scanner-cli-3.0
 # SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/se_22000201_installed.tar.gz
 # Define the base name of the tar file so that it can be reused way down below
 SLICK_EDIT=se_24000008_linux64.tar.gz
-SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
+SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SLICK_EDIT}
 
 ##########################################################################
 # Install additional repositories to assist with virtualization support
@@ -23,14 +23,14 @@ function InstallEpelRepository
     echo "Function: InstallEpelRepository"
     
     # Use this command, from: https://wiki.centos.org/AdditionalResources/Repositories
-    yum --enablerepos=extras install -y epel-release
+    dnf --enablerepos=extras install -y epel-release
 }
 
 ##########################################################################
 # Normal update...
 function PerformUpdate
 {
-    yum -y update
+    dnf -y update
 }
 # ------------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ function PerformUpdate
 function InstallDKMS
 {
     echo "Function: InstallDKMS"
-    yum -y --enablerepo=epel install dkms
+    dnf -y --enablerepo=epel install dkms
 }
 # ------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ function InstallDKMS
 function InstallFilezilla
 {
     echo "Function: InstallFilezilla"
-    yum -y --enablerepo=epel install filezilla
+    dnf -y --enablerepo=epel install filezilla
 }
 # ------------------------------------------------------------------------
 
@@ -70,20 +70,20 @@ function DisableSELinux
 function InstallDevelopmentApplications
 {
     echo "Function: InstallDevelopmentApplications"
-    yum -y install subversion
-    yum -y install gedit
+    dnf -y install subversion
+    dnf -y install gedit
 
     # Install development & test support items
-    yum -y groupinstall "Development Tools"
-    yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel libpng libpng-devel
-    yum -y install python-devel
-    yum -y install cmake
+    dnf -y groupinstall "Development Tools"
+    dnf -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel libpng libpng-devel
+    dnf -y install python-devel
+    dnf -y install cmake
 
     # Install graphing helpers for Doxygen
-    yum -y install graphviz-graphs
-    yum -y install graphviz-devel
-    yum -y install graphviz-python
-    yum -y install graphviz-php
+    dnf -y install graphviz-graphs
+    dnf -y install graphviz-devel
+    dnf -y install graphviz-python
+    dnf -y install graphviz-php
 
 }
 # ------------------------------------------------------------------------
@@ -296,8 +296,8 @@ fi
 # See: build-aux/gen-lists-of-programs.sh
 function InstallMingw32
 {
-yum -y install mingw32-gcc mingw32-libxml2 mingw32-minizip mingw32-libwebp 
-yum -y install mingw32-pdcurses mingw32-gcc-c++
+dnf -y install mingw32-gcc mingw32-libxml2 mingw32-minizip mingw32-libwebp 
+dnf -y install mingw32-pdcurses mingw32-gcc-c++
 }
 # ------------------------------------------------------------------------
 
@@ -375,6 +375,56 @@ fi
 # ------------------------------------------------------------------------
 
 ##########################################################################
+# Add host names needed in BMX
+function AddBioMerieuxHostNames
+{
+if grep -q usstlsvn02 /etc/hosts; then
+    echo "usstlsvn02 entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding usstlsvn02 to /etc/hosts"
+    echo '10.17.20.6     usstlsvn02  usstlsvn02.us.noam.biomerieux.net # Main Subversion Server' >> /etc/hosts
+fi
+
+if grep -q usstlbas02 /etc/hosts; then
+    echo "usstlbas02 entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding usstlbas02 to /etc/hosts"
+    echo '10.17.20.10    usstlbas02  usstlbas02.us.noam.biomerieux.net # TeamCity Server' >> /etc/hosts
+fi
+
+if grep -q usstllic01 /etc/hosts; then
+    echo "usstllic01 entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding usstllic01 to /etc/hosts"
+    echo '10.17.20.13    usstllic01  usstllic01.us.noam.biomerieux.net # License Server (W7)' >> /etc/hosts
+fi
+
+if grep -q usstlgit03 /etc/hosts; then
+    echo "usstlgit03 entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding usstlgit03 to /etc/hosts"
+    echo '10.17.20.23    usstlgit03  usstlgit03.us.noam.biomerieux.net # Production Git Server (Atlassian Bitbucket on RHEL 7)' >> /etc/hosts
+fi
+
+if grep -q sonarqube /etc/hosts; then
+    echo "sonarqube entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding sonarqube to /etc/hosts"
+    echo '10.17.20.29    sonarqube   sonarqube.us.noam.biomerieux.net # SonarQube Server' >> /etc/hosts
+fi
+
+if grep -q usstlweb02 /etc/hosts; then
+    echo "usstlweb02 entry already exists in /etc/hosts (skipping)"
+else
+    echo "Adding usstlweb02 to /etc/hosts"
+    echo '10.17.20.62    usstlweb02   usstlweb02.us.noam.biomerieux.net # Engineering Web Server' >> /etc/hosts
+fi
+}
+
+# Static IP updates finished
+# ------------------------------------------------------------------------
+
+##########################################################################
 # Install Sqlite Studio 
 # https://github.com/pawelsalawa/sqlitestudio/wiki/Instructions_for_compilation_under_Linux#what-you-need 
 # https://jdhao.github.io/2017/09/04/install-gcc-newer-version-on-centos/
@@ -382,8 +432,8 @@ fi
 # TODO - Seems this wasn't succeeding on last attempt
 function InstallSqliteStudio
 {
-    yum -y install sqlite
-    yum -y install qt5-qtbase-devel
+    dnf -y install sqlite
+    dnf -y install qt5-qtbase-devel
 
     # This clone operation creates the sqlitestudio directory with the code
     git clone https://github.com/pawelsalawa/sqlitestudio.git
@@ -425,10 +475,11 @@ InstallDevelopmentApplications
 # InstallPython34
 # InstallPythonExtensions
 # InstallCPPUnit
-# InstallSonarScanner
+InstallSonarScanner
 # InstallGoogleChrome
-# InstallMingw32
+InstallMingw32
 # InstallSqliteStudio
 # PrepareSlickEdit
 # AddLocalHostNames
+AddBioMerieuxHostNames
 
