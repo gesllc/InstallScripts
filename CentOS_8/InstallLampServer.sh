@@ -92,8 +92,10 @@ function InstallBasicPackages
     yum -y install wget
     yum -y install nano
 
-    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
-    yum -y install epel-release
+    # From: https://www.itsupportwale.com/blog/how-to-install-php-7-3-on-centos-8/
+    # Install repositories for access to latest PHP
+    dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+    dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
     
     # The following line is not specifically required, but will show you what package
     # is required to install semanage (for SELinux configuration).
@@ -181,23 +183,22 @@ function InstallPhp
     echo "Function: InstallPhp starting"
 
     # Add the Remi CentOS repository
-    rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+#    rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+#
+#    # Install yum-utils because the yum-config-manager is needed
+#    yum -y install yum-utils
+#
+#    # Now install PHP 7.3
+#    yum-config-manager --enable remi-php73
+#    yum -y install php php-opcache
 
-    # Install yum-utils because the yum-config-manager is needed
-    yum -y install yum-utils
-
-    # Now install PHP 7.3
-    yum-config-manager --enable remi-php73
-    yum -y install php php-opcache
+    dnf module install -y php:remi-7.4
     
-    # And restart Apache to apply the changes
-    systemctl restart httpd
-
     # Create dummy php test page
     echo "<?php phpinfo(); ?>" >> /var/www/html/info.php
 
     # Add other PHP modules as needed (desired?) - yum search php
-    yum -y install php-mysqlnd php-pdo php-pecl-zip php-common php-fpm php-cli
+    yum -y install php-mysqlnd php-pdo php-pecl-zip php-common php-fpm php-cli php-bcmath
     
     # This group supports phpMyAdmin
     yum -y install php-json php-mbstring 
