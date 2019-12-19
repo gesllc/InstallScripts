@@ -257,11 +257,11 @@ function InstallPhpMyAdmin
     echo '    AddDefaultCharset UTF-8' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '    <IfModule mod_authz_core.c>' >> /etc/httpd/conf.d/phpmyadmin.conf
-    echo '        Apache 2.4' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        # Apache 2.4' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '        Require all granted' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '    </IfModule>' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '    <IfModule !mod_authz_core.c>' >> /etc/httpd/conf.d/phpmyadmin.conf
-    echo '        Apache 2.2' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        # Apache 2.2' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '        Order Deny,Allow' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '        Deny from All' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo '        Allow from 127.0.0.1' >> /etc/httpd/conf.d/phpmyadmin.conf
