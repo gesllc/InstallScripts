@@ -19,30 +19,31 @@
 # See: https://computingforgeeks.com/how-to-install-mariadb-database-server-on-rhel-8/
 #
 # For PhpMyAdmin
+# See: https://computingforgeeks.com/install-and-configure-phpmyadmin-on-rhel-8/
 #
-    # Configuration notes
-    # phpMyAdmin web interface should be available:
-    # http://<hostname>/phpmyadmin
-    #
-    # The login screen should display.
-    # Log in using your database credentials - username & password
+# Configuration notes
+# phpMyAdmin web interface should be available:
+# http://<hostname>/phpmyadmin
+#
+# The login screen should display.
+# Log in using your database credentials - username & password
 #
 # OLD notes follow
-    # Edit /etc/httpd/conf.d/phpMyAdmin.conf
-    # Comment all instances of Require ip 127.0.0.1
-    # Comment all instances of Require ip ::1
-    # Comment all instances of Allow from 127.0.0.1
-    # Comment all instances of Allow from ::1
-    # For all of the items commented above, add the line:
-    # Require all granted
-    #
-    # If MySQL password has not yet been set:
-    # mysql (starts mysql prompt)
-    # use mysql;
-    # updte user setpassword=PASSWORD("<password>") where User='root';
-    # flush privileges;
-    # quit;
-    # Then restart Apache ...
+# Edit /etc/httpd/conf.d/phpMyAdmin.conf
+# Comment all instances of Require ip 127.0.0.1
+# Comment all instances of Require ip ::1
+# Comment all instances of Allow from 127.0.0.1
+# Comment all instances of Allow from ::1
+# For all of the items commented above, add the line:
+# Require all granted
+#
+# If MySQL password has not yet been set:
+# mysql (starts mysql prompt)
+# use mysql;
+# updte user setpassword=PASSWORD("<password>") where User='root';
+# flush privileges;
+# quit;
+# Then restart Apache ...
 #
 # Other notes (TBD - investigate their need)
 # The following is still a work in progress....
@@ -72,6 +73,13 @@
 ## https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-apache-on-a-centos-7-server
 
 
+##########################################################################
+#
+function PerformUpdate
+{
+    yum -y update
+}
+# ------------------------------------------------------------------------
 
 ##########################################################################
 #
@@ -81,7 +89,6 @@ function InstallBasicPackages
 
     yum -y install subversion
     yum -y install git
-    yum -y update
     yum -y install wget
     yum -y install nano
 
@@ -96,7 +103,6 @@ function InstallBasicPackages
 
     echo "Function: InstallBasicPackages complete"
 }
-# ------------------------------------------------------------------------
 
 ##########################################################################
 #
@@ -138,20 +144,13 @@ function InstallApache
     # systemctl start httpd
     systemctl enable --now httpd.service
 
-    # Open firewall for http (consider removing this one after https/ssl is configured)
-    firewall-cmd --permanent --zone=public --add-service=http
-
-    # Open firewall for https
-    firewall-cmd --permanent --zone=public --add-service=https
-    firewall-cmd --reload
-
+    # Make a stub HTML page
     echo "<h1>Hello Internet World, this is your CentOS_8 Apache web server.</h1>" >> /var/www/html/index.html
 
     # The following shows the status of httpd.service
     systemctl is-enabled httpd.service
     
     echo "Function: InstallApache complete"
-    
 }
 # ------------------------------------------------------------------------
 
@@ -250,25 +249,26 @@ function InstallPhpMyAdmin
     
     # Now create & edit /etc/httpd/conf.d/phpmyadmin.conf with the content:
     
-    ## Apache configuration for phpMyAdmin
-    # Alias /phpMyAdmin /usr/share/phpmyadmin/
-    #Alias /phpmyadmin /usr/share/phpmyadmin/
- 
-    #<Directory /usr/share/phpmyadmin/>
-    #    AddDefaultCharset UTF-8
- 
-    #    <IfModule mod_authz_core.c>
-    #         # Apache 2.4
-    #         Require all granted
-    #       </IfModule>
-    #       <IfModule !mod_authz_core.c>
-    #         # Apache 2.2
-    #         Order Deny,Allow
-    #         Deny from All
-    #         Allow from 127.0.0.1
-    #         Allow from ::1
-    #       </IfModule>
-    #    </Directory>
+    echo '# Apache configuration for phpMyAdmin' > /etc/httpd/conf.d/phpmyadmin.conf
+    echo 'Alias /phpMyAdmin /usr/share/phpmyadmin/' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo 'Alias /phpmyadmin /usr/share/phpmyadmin/' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo 'Directory /usr/share/phpmyadmin/>' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '    AddDefaultCharset UTF-8' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '    <IfModule mod_authz_core.c>' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        Apache 2.4' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        Require all granted' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '    </IfModule>' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '    <IfModule !mod_authz_core.c>' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        Apache 2.2' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        Order Deny,Allow' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        Deny from All' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        Allow from 127.0.0.1' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '        Allow from ::1' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '    </IfModule>' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '    </Directory>' >> /etc/httpd/conf.d/phpmyadmin.conf
+    echo '' >> /etc/httpd/conf.d/phpmyadmin.conf
     
     # Validate Apache configuration - must report 'Syntax OK'
     apachectl configtest
@@ -280,11 +280,21 @@ function InstallPhpMyAdmin
     restorecon -Rv /usr/share/phpmyadmin
     
     echo "Function: InstallPhpMyAdmin complete"
-    
-
 }
 # ------------------------------------------------------------------------
 
+##########################################################################
+function ConfigureFirewall
+{
+    # Open firewall for http (consider removing this one after https/ssl is configured)
+    firewall-cmd --permanent --zone=public --add-service=http
+
+    # Open firewall for https
+    firewall-cmd --permanent --zone=public --add-service=https
+
+    firewall-cmd --reload
+}
+# ------------------------------------------------------------------------
 
 # ====================================================================================
 # ====================================================================================
@@ -294,6 +304,9 @@ function InstallPhpMyAdmin
 #
 # ====================================================================================
 
+systemctl stop packagekit
+
+PerformUpdate
 InstallBasicPackages
 
 AddLocalHostNames
@@ -302,4 +315,5 @@ InstallPhp
 InstallDataBase
 InstallApache
 InstallPhpMyAdmin
+ConfigureFirewall
 
