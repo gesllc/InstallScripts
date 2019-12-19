@@ -147,7 +147,7 @@ function InstallApache
     systemctl enable --now httpd.service
 
     # Make a stub HTML page
-    echo "<h1>Hello Internet World, this is your CentOS_8 Apache web server.</h1>" >> /var/www/html/index.html
+    echo "<h1>Hello Internet World, this is our Apache web server.</h1>" >> /var/www/html/index.html
 
     # The following shows the status of httpd.service
     systemctl is-enabled httpd.service
@@ -243,13 +243,14 @@ function InstallPhpMyAdmin
     # Edit /usr/share/phpmyadmin/config.inc.php
     # Set a secret passphrase - NOTE must be 32 chars long
     # $cfg['blowfish_secret'] = 'H2OxcGXxflSd8JwrwVlh6KW6s2rER63i';
+    sed -i "s/\$cfg\['blowfish_secret'\] = ''/\$cfg\['blowfish_secret'\] = 'H2OxcGXxflSd8JwrwVlh6KW6s2rER63i'/g" /usr/share/phpmyadmin/config.inc.php
     
     # Configure the Temp directory to use /var/lib/phpmyadmin/tmp (created above)
     # Add the following line after the SaveDir entry
     # $cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
+    sed -i "/SaveDir/ a \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'" /usr/share/phpmyadmin/config.inc.php
     
-    # Now create & edit /etc/httpd/conf.d/phpmyadmin.conf with the content:
-    
+    # Create   /etc/httpd/conf.d/phpmyadmin.conf   with the following contents:
     echo '# Apache configuration for phpMyAdmin' > /etc/httpd/conf.d/phpmyadmin.conf
     echo 'Alias /phpMyAdmin /usr/share/phpmyadmin/' >> /etc/httpd/conf.d/phpmyadmin.conf
     echo 'Alias /phpmyadmin /usr/share/phpmyadmin/' >> /etc/httpd/conf.d/phpmyadmin.conf
@@ -287,6 +288,8 @@ function InstallPhpMyAdmin
 ##########################################################################
 function ConfigureFirewall
 {
+    echo "Function: ConfigureFirewall starting"
+
     # Open firewall for http (consider removing this one after https/ssl is configured)
     firewall-cmd --permanent --zone=public --add-service=http
 
@@ -294,6 +297,8 @@ function ConfigureFirewall
     firewall-cmd --permanent --zone=public --add-service=https
 
     firewall-cmd --reload
+
+    echo "Function: ConfigureFirewall complete"
 }
 # ------------------------------------------------------------------------
 
@@ -310,11 +315,11 @@ systemctl stop packagekit
 PerformUpdate
 InstallBasicPackages
 
-AddLocalHostNames
-
+ConfigureFirewall
 InstallPhp
 InstallDataBase
 InstallApache
 InstallPhpMyAdmin
-ConfigureFirewall
+
+AddLocalHostNames
 
