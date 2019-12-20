@@ -4,38 +4,36 @@
 # Significant contents of this script are courtesy of:
 # https://www.howtoforge.com/tutorial/centos-lamp-server-apache-mysql-php/
 # 
-# 
+
 ##########################################################################
-# POST INSTALLATION CONFIGURATION REQUIREMENTS
-#
-# For Apache:
+#            POST INSTALLATION CONFIGURATION REQUIREMENTS                #
+##########################################################################
+
+### For Apache:
 # Configuration notes
 # Load SSL modules in /etc/httpd/conf/httpd.conf per examples below
 # See: https://computingforgeeks.com/install-apache-with-ssl-http2-on-rhel-centos/   
-#
-# For Database
+
+# systemctl restart httpd.service
+
+###  For Database - MariaDB
 # Configuration notes
-# Must run mysql_secure_installation to set MySQL root password, etc.
 # See: https://computingforgeeks.com/how-to-install-mariadb-database-server-on-rhel-8/
 #
-# For PhpMyAdmin
-# See: https://computingforgeeks.com/install-and-configure-phpmyadmin-on-rhel-8/
+# Run: mysql_secure_installation 
+# 
+#      * Set root password               Temporarily use C...S...00
+#      * Remove anonymous users?         Y   
+#      * Disallow root login remotely?   Y   
+#      * Remote test database .... ?     Y   
+#      * Reload privilege tables now?    Y   
 #
-# Configuration notes
-# phpMyAdmin web interface should be available:
-# http://<hostname>/phpmyadmin
+# You can then start mysql using:
+#     mysql -u root -p
 #
-# The login screen should display.
-# Log in using your database credentials - username & password
+#     SELECT VERSION():     <== Shows the MariaDB version
 #
-# OLD notes follow
-# Edit /etc/httpd/conf.d/phpMyAdmin.conf
-# Comment all instances of Require ip 127.0.0.1
-# Comment all instances of Require ip ::1
-# Comment all instances of Allow from 127.0.0.1
-# Comment all instances of Allow from ::1
-# For all of the items commented above, add the line:
-# Require all granted
+#     exit;                 <== Exits & returns to the shell
 #
 # If MySQL password has not yet been set:
 # mysql (starts mysql prompt)
@@ -43,8 +41,32 @@
 # updte user setpassword=PASSWORD("<password>") where User='root';
 # flush privileges;
 # quit;
-# Then restart Apache ...
+ 
+
+
+### For PhpMyAdmin
+# See: https://computingforgeeks.com/install-and-configure-phpmyadmin-on-rhel-8/
 #
+# TBD - NOTE: You can restrict access from specific IP by adding line below (/etc/httpd/conf.d/phpmyadmin.conf)
+#     Require ip 127.0.0.1 192.168.0.0/24
+#                          10.17.20.0/24     <== ???
+#                          10.1.1.0/24       <== ???
+#
+# phpMyAdmin web interface should be available:
+# http://<hostname>/phpmyadmin
+# The login screen should display.
+#
+# Log in using your database credentials - use root password set with mysql-secure-installation
+#
+# TBD OLD notes follow
+# Edit /etc/httpd/conf.d/phpMyAdmin.conf
+# Comment all instances of Require ip 127.0.0.1
+# Comment all instances of Require ip ::1
+# Comment all instances of Allow from 127.0.0.1
+# Comment all instances of Allow from ::1
+# For all of the items commented above, add the line:
+# Require all granted
+
 # Other notes (TBD - investigate their need)
 # The following is still a work in progress....
 
@@ -57,14 +79,6 @@
 # sudo chmod -R g+w /var/www/html
 # sudo chmod g+s /var/www/html
 
-## After script completes:
-## mysql_secure_installation
-##
-## Edit /etc/httpd/conf.d/phpMyAdmin.conf
-## Change default Alias entries as follows:
-##  # Alias /phpMyAdmin /usr/share/phpMyAdmin
-##  # Alias /phpmyadmin /usr/share/phpMyAdmin
-##  Alias /nothingtosee /usr/share/phpMyAdmin
 ##
 ## Then restart Apache again with:
 ## systemctl restart httpd.service
@@ -77,7 +91,7 @@
 #
 function PerformUpdate
 {
-    yum -y update
+    dnf -y update
 }
 # ------------------------------------------------------------------------
 
@@ -87,10 +101,10 @@ function InstallBasicPackages
 {
     echo "Function: InstallBasicPackages starting"
 
-    yum -y install subversion
-    yum -y install git
-    yum -y install wget
-    yum -y install nano
+    dnf install -y subversion
+    dnf install -y git
+    dnf install -y wget
+    dnf install -y nano
 
     # From: https://www.itsupportwale.com/blog/how-to-install-php-7-3-on-centos-8/
     # Install repositories for access to latest PHP
@@ -101,7 +115,7 @@ function InstallBasicPackages
     # is required to install semanage (for SELinux configuration).
     # It tells you that you need policycoreutils-python-utils
     yum whatprovides semanage
-    yum install -y policycoreutils-python-utils
+    dnf install -y policycoreutils-python-utils
 
     echo "Function: InstallBasicPackages complete"
 }
@@ -139,9 +153,9 @@ function InstallApache
     echo "Function: InstallApache starting"
 
     # The following are required to support SSL
-    yum -y install mod_ssl openssl
+    dnf install -y mod_ssl openssl
 
-    yum -y install @httpd
+    dnf -y install -y @httpd
 
     # systemctl start httpd
     systemctl enable --now httpd.service
@@ -163,14 +177,14 @@ function InstallDataBase
 {
     echo "Function: InstallDataBase starting"
 
-    yum -y install mariadb mariadb-server
-
-    systemctl start mariadb
-    systemctl enable mariadb
+    #yum -y install mariadb mariadb-server
+    dnf module install mariadb
 
     # The following displays version information for MariaDB
     rpm -qi mariadb-server
     
+    systemctl enable --now mariadb
+
     echo "Function: InstallDataBase complete"
 }    
 # ------------------------------------------------------------------------
