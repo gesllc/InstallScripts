@@ -67,6 +67,71 @@ function InstallDevelopmentApplications
 # ------------------------------------------------------------------------
 
 ##########################################################################
+function InstallPythonExtensions
+{
+    echo "Function: InstallPythonExtensions starting"
+
+    # The no proxy version
+    pip install --upgrade pip setuptools
+    pip install numpy
+    pip install matplotlib
+    pip install cython
+    pip install pexpect
+    pip install robotframework
+    pip install pyusb
+
+    echo "Function: InstallPythonExtensions finished"
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
+# Check for existence of the Sonar Scanner on this VM and install if not already there
+function InstallSonarScanner
+{
+echo "Function: InstallSonarScanner"
+
+    if [ -f /opt/sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties ]; then
+        echo "Sonar Scanner (configuration file) already exists (skipping)"
+    else
+    wget ${SONAR_SCANNER} --directory-prefix /opt
+        cd /opt
+        unzip sonar-scanner-cli-3.0.1.733-linux.zip
+        chown -R developer:root sonar-scanner-3.0.1.733-linux
+
+        # Add URL of sonarqube server below their example line
+        sed -i '/sonar.host.url/ a sonar.host.url=http://sonarqube:9000' sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties
+
+        # Add source encoding definition line below their example
+        sed -i '/sonar.sourceEncoding/ a sonar.sourceEncoding=ISO8859-1' sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties
+
+        rm sonar-scanner-cli-3.0.1.733-linux.zip
+        cd
+
+        # Add an alias for the honkin' long scanner path/command
+        echo 'alias sonarscan="/opt/sonar-scanner-3.0.1.733-linux/bin/sonar-scanner"' >> /home/developer/.bashrc  
+    fi
+}
+# End of Sonar Scanner configuration section
+# ------------------------------------------------------------------------
+
+##########################################################################
+# https://fedoraproject.org/wiki/MinGW/Tutorial
+function InstallMingw32
+{
+    echo "Function: InstallMingw32 starting"
+
+    dnf install -y mingw32-gcc
+    dnf install -y mingw32-gcc-c++
+    dnf install -y mingw32-libxml2
+    dnf install -y mingw32-minizip
+    dnf install -y mingw32-libwebp 
+    dnf install -y mingw32-pdcurses 
+
+    echo "Function: InstallMingw32 finished"
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
 function PrepareSlickEdit
 {
     if [ ! -d "/opt/slickedit-pro2019" ]; then
@@ -157,7 +222,12 @@ RemoveUnwantedPackages
 dnf -y update
 
 InstallDevelopmentApplications
+InstallPythonExtensions
+
+InstallSonarScanner
+InstallMingw32
 
 PrepareSlickEdit
 
 AddBioMerieuxHostNames
+
