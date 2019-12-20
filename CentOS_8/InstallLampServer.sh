@@ -178,7 +178,7 @@ function InstallDataBase
     echo "Function: InstallDataBase starting"
 
     #yum -y install mariadb mariadb-server
-    dnf module install mariadb
+    dnf module install -y mariadb
 
     # The following displays version information for MariaDB
     rpm -qi mariadb-server

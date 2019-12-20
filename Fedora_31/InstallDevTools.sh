@@ -3,6 +3,9 @@
 # Define parameters that may chage over time
 APPLICATION_SERVER_URL=http://10.17.20.62/Applications
 
+SONAR_SCANNER=sonar-scanner-cli-3.0.1.733-linux
+SONAR_SCANNER_URL=${APPLICATION_SERVER_URL}/SonarQube/${SONAR_SCANNER}
+
 SLICK_EDIT=se_24000008_linux64.tar.gz
 SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SLICK_EDIT}
 
@@ -93,9 +96,9 @@ echo "Function: InstallSonarScanner"
     if [ -f /opt/sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties ]; then
         echo "Sonar Scanner (configuration file) already exists (skipping)"
     else
-    wget ${SONAR_SCANNER} --directory-prefix /opt
+    wget ${SONAR_SCANNER_URL} --directory-prefix /opt
         cd /opt
-        unzip sonar-scanner-cli-3.0.1.733-linux.zip
+        unzip ${SONAR_SCANNER}
         chown -R developer:root sonar-scanner-3.0.1.733-linux
 
         # Add URL of sonarqube server below their example line
@@ -104,7 +107,7 @@ echo "Function: InstallSonarScanner"
         # Add source encoding definition line below their example
         sed -i '/sonar.sourceEncoding/ a sonar.sourceEncoding=ISO8859-1' sonar-scanner-3.0.1.733-linux/conf/sonar-scanner.properties
 
-        rm sonar-scanner-cli-3.0.1.733-linux.zip
+        rm --force ${SONAR_SCANNER} 
         cd
 
         # Add an alias for the honkin' long scanner path/command
@@ -140,7 +143,7 @@ function PrepareSlickEdit
         cd /opt
         tar -xvf ${SLICK_EDIT}
 
-        rm ${SLICK_EDIT}
+        rm --force ${SLICK_EDIT}
         cd
 
         echo "SlickEdit has been extracted in /opt, manual installation & setup required"
