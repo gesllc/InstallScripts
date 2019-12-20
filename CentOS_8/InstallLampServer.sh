@@ -248,7 +248,7 @@ function InstallPhpMyAdmin
     # Configure the Temp directory to use /var/lib/phpmyadmin/tmp (created above)
     # Add the following line after the SaveDir entry
     # $cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
-    sed -i "/SaveDir/ a \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'" /usr/share/phpmyadmin/config.inc.php
+    sed -i "/SaveDir/ a \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';" /usr/share/phpmyadmin/config.inc.php
     
     # Create   /etc/httpd/conf.d/phpmyadmin.conf   with the following contents:
     echo '# Apache configuration for phpMyAdmin' > /etc/httpd/conf.d/phpmyadmin.conf
