@@ -108,9 +108,9 @@ function InstallBasicPackages
 
 ##########################################################################
 #
-function AddLocalHostNames
+function AddBioMerieuxHostNames
 {
-    echo "Function: AddLocalHostnames starting"
+    echo "Function: AddBioMerieuxHostNames starting"
 
     if grep -q usstlweb01 /etc/hosts; then
         echo "usstlweb01 entry already exists in /etc/hosts (skipping)"
@@ -126,7 +126,7 @@ function AddLocalHostNames
         echo '10.17.20.62   usstlweb02  usstlweb02.us.noam.biomerieux.net    # Engineering Web Server' >> /etc/hosts
     fi
 
-    echo "Function: AddLocalHostnames complete"
+    echo "Function: AddBioMerieuxHostNames complete"
 }
 # ------------------------------------------------------------------------
 
@@ -321,5 +321,5 @@ InstallDataBase
 InstallApache
 InstallPhpMyAdmin
 
-AddLocalHostNames
+AddBioMerieuxHostNames
 
