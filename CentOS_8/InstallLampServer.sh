@@ -86,6 +86,10 @@
 ## Also set up Web Server Authentication Gate and .htaccess file per:
 ## https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-apache-on-a-centos-7-server
 
+PACKAGE_SERVER=http://10.17.20.62/Packages
+
+WORDPRESS=wordpress-5.3.2.tar.gz
+WORDPRESS_URL=${PACKAGE_SERVER}/${WORDPRESS}
 
 ##########################################################################
 #
@@ -300,6 +304,18 @@ function InstallPhpMyAdmin
 # ------------------------------------------------------------------------
 
 ##########################################################################
+#
+function InstallWordpress
+{
+    echo "Function: InstallWordpress starting"
+
+    wget ${WORDPRESS_URL}
+
+    echo "Function: InstallWordpress complete"
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
 function ConfigureFirewall
 {
     echo "Function: ConfigureFirewall starting"
@@ -334,6 +350,8 @@ InstallPhp
 InstallDataBase
 InstallApache
 InstallPhpMyAdmin
+
+InstallWordpress
 
 AddBioMerieuxHostNames
 
