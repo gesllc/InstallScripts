@@ -3,7 +3,7 @@
 # Define parameters that may chage over time
 APPLICATION_SERVER_URL=http://10.17.20.62/Applications
 
-SONAR_SCANNER=sonar-scanner-cli-3.0.1.733-linux
+SONAR_SCANNER=sonar-scanner-cli-3.0.1.733-linux.zip
 SONAR_SCANNER_URL=${APPLICATION_SERVER_URL}/SonarQube/${SONAR_SCANNER}
 
 SLICK_EDIT=se_24000008_linux64.tar.gz
@@ -63,6 +63,7 @@ function InstallDevelopmentApplications
     dnf install -y gitk
     dnf install -y git-gui
     dnf install -y meld
+    dnf install -y vim
 
     dnf install -y alacarte
 
