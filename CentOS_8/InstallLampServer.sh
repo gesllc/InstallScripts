@@ -86,10 +86,59 @@
 ## Also set up Web Server Authentication Gate and .htaccess file per:
 ## https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-apache-on-a-centos-7-server
 
-PACKAGE_SERVER=http://10.17.20.62/Packages
 
-WORDPRESS=wordpress-5.3.2.tar.gz
-WORDPRESS_URL=${PACKAGE_SERVER}/${WORDPRESS}
+### For WordPress
+# See: https://wordpress.org
+#
+# The InstallWordPress function sets the DB_NAME, DB_USER and DB_PASSWORD 
+# to 'wp_db, 'wp_user' and 'wp_secret_pwd' respectively.
+#
+# NOTE that these values must be created in the database before
+#      you can expect WordPress to function properly.
+#
+#      ALSO, if these values are changed here, the InstallWordPress 
+#            function must be changed accordingly
+#
+# From: http://www.daniloaz.com/en/how-to-create-a-user-in-mysql-mariadb-and-grant-permissions-on-a-specific-database/
+#       Site above includes a script option, might be worth looking at...
+#       But leaves you hanging a bit on some of the syntax, steps below work though...
+#
+# Create the necessary database entries using:
+#     mysql -u root -p
+#     CREATE DATABASE `wp_db`;    <<== NOTE those are backticks, not single quotes
+#     CREATE USER 'wp_user'@'localhost' IDENTIFIED BY 'wp_secret_pwd'; 
+#     GRANT ALL PRIVILEGES ON wp_db.* TO 'wp_user'@'localhost';
+#     FLUSH PRIVILEGES;
+#
+#     # To test the above:
+#     SHOW GRANTS FOR wp_user@localhost;
+#
+#     # To back out mistakes that may have been made...
+#     DROP USER wp_user@localhost
+#     DROP DATABASE wp_db;
+#
+#     exit;          <<== To return to shell
+#
+# The KEY and SALT values need to be set manually using values obtained here:
+#     https://api.wordpress.org/secret-key/1.1/salt/
+#
+
+##########################################################################
+#
+# URL & Application definitions
+#
+
+# The following three assume the specific WORDPRESS package was downloaded 
+# and then uploaded to our internal server's Packages directory
+# PACKAGE_SERVER=http://10.17.20.62/Packages
+# WORDPRESS=wordpress-5.3.2.tar.gz
+# WORDPRESS_URL=${PACKAGE_SERVER}/${WORDPRESS}
+
+# Download (wget) the latest version directly from the wordpress.org
+# !! Proceed with caution - wget is not always reliable inside bioMerieux
+WORDPRESS=latest.tar.gz
+WORDPRESS_URL=https://wordpress.org/${WORDPRESS}
+
 
 ##########################################################################
 #
@@ -221,7 +270,7 @@ function InstallPhp
     # This group supports phpMyAdmin
     yum -y install php-json php-mbstring 
 
-    # This group supports Wordpress, Joomla & Drupal
+    # This group supports WordPress, Joomla & Drupal
     yum -y install php-gd php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-soap curl curl-devel
 
     echo "Function: InstallPhp complete"
@@ -305,13 +354,32 @@ function InstallPhpMyAdmin
 
 ##########################################################################
 #
-function InstallWordpress
+function InstallWordPress
 {
-    echo "Function: InstallWordpress starting"
+    echo "Function: InstallWordPress starting"
 
-    wget ${WORDPRESS_URL}
+    wget --no-check-certificate ${WORDPRESS_URL} --directory-prefix /var/www/html
+    cd /var/www/html
+    tar -xvf ${WORDPRESS}
 
-    echo "Function: InstallWordpress complete"
+    # Remove the original file after extracted
+    rm -f ${WORDPRESS}
+
+#    COMMENTING these out to just try the WEB Installer.
+#               Seems appropriate because of the KEYs & SALTs.
+#
+#    # Create a live config file from the sample provided
+#    cp wordpress/wp-config-sample.php wordpress/wp-config.php
+#
+#    # Set parameters to match the WordPress database configuration
+#    # See:   '### For WordPress'  section near top of script
+#    sed -i "s/'DB_NAME', 'database_name_here'/'DB_NAME', 'wp_db'/g" /var/www/html/wordpress/wp-config.php
+#    sed -i "s/'DB_USER', 'username_here'/'DB_USER', 'wp_user'/g" /var/www/html/wordpress/wp-config.php
+#    sed -i "s/'DB_PASSWORD', 'password_here'/'DB_PASSWORD', 'wp_secret_pwd'/g" /var/www/html/wordpress/wp-config.php
+    
+    cd
+
+    echo "Function: InstallWordPress complete"
 }
 # ------------------------------------------------------------------------
 
@@ -351,7 +419,7 @@ InstallDataBase
 InstallApache
 InstallPhpMyAdmin
 
-InstallWordpress
+InstallWordPress
 
 AddBioMerieuxHostNames
 
