@@ -465,8 +465,8 @@ systemctl stop packagekit
 
 # Note that installing EPEL seems to work best BEFORE updating
 InstallEpelRepository      # Enables the EPEL repository 
-# InstallDKMS                # REQUIRES EPSL Repository Installs DKMS (for virtualization support)
-InstallFilezilla           # REQUIRES EPSL Repository Installs FileZilla
+# InstallDKMS                # REQUIRES EPEL Repository Installs DKMS (for virtualization support)
+InstallFilezilla           # REQUIRES EPEL Repository Installs FileZilla
 
 # DisableSELinux
 PerformUpdate
