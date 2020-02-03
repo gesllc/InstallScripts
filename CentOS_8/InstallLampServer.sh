@@ -9,7 +9,7 @@
 #            POST INSTALLATION CONFIGURATION REQUIREMENTS                #
 ##########################################################################
 
-### For Apache:
+### For Apache ########################################################### 
 # Configuration notes
 # Load SSL modules in /etc/httpd/conf/httpd.conf per examples below
 # See: https://computingforgeeks.com/install-apache-with-ssl-http2-on-rhel-centos/   
@@ -22,6 +22,7 @@
 #
 # Run: mysql_secure_installation 
 # 
+#      * If root password was not previously set, press enter for option to create it
 #      * Set root password               Temporarily use C...S...00
 #      * Remove anonymous users?         Y   
 #      * Disallow root login remotely?   Y   
@@ -35,22 +36,17 @@
 #
 #     exit;                 <== Exits & returns to the shell
 #
-# If MySQL password has not yet been set:
+# To set or change MySQL password:
 # mysql (starts mysql prompt)
 # use mysql;
-# updte user setpassword=PASSWORD("<password>") where User='root';
+# update user setpassword=PASSWORD("<password>") where User='root';
 # flush privileges;
 # quit;
  
 
 
-### For PhpMyAdmin
+### For PhpMyAdmin #######################################################
 # See: https://computingforgeeks.com/install-and-configure-phpmyadmin-on-rhel-8/
-#
-# TBD - NOTE: You can restrict access from specific IP by adding line below (/etc/httpd/conf.d/phpmyadmin.conf)
-#     Require ip 127.0.0.1 192.168.0.0/24
-#                          10.17.20.0/24     <== ???
-#                          10.1.1.0/24       <== ???
 #
 # phpMyAdmin web interface should be available:
 # http://<hostname>/phpmyadmin
@@ -87,7 +83,7 @@
 ## https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-apache-on-a-centos-7-server
 
 
-### For WordPress
+### For WordPress ########################################################
 # See: https://wordpress.org
 #
 # The InstallWordPress function sets the DB_NAME, DB_USER and DB_PASSWORD 
@@ -104,10 +100,10 @@
 #       But leaves you hanging a bit on some of the syntax, steps below work though...
 #
 # Create the necessary database entries using:
-#     mysql -u root -p
-#     CREATE DATABASE `wp_db`;    <<== NOTE those are backticks, not single quotes
+#     mysql -u root -p            <<== Will require root password
+#     CREATE DATABASE `wordpress`;    <<== NOTE those are backticks, not single quotes
 #     CREATE USER 'wp_user'@'localhost' IDENTIFIED BY 'wp_secret_pwd'; 
-#     GRANT ALL PRIVILEGES ON wp_db.* TO 'wp_user'@'localhost';
+#     GRANT ALL PRIVILEGES ON wordpress.* TO 'wp_user'@'localhost';
 #     FLUSH PRIVILEGES;
 #
 #     # To test the above:
@@ -119,20 +115,11 @@
 #
 #     exit;          <<== To return to shell
 #
-# The KEY and SALT values need to be set manually using values obtained here:
-#     https://api.wordpress.org/secret-key/1.1/salt/
-#
 
 ##########################################################################
 #
 # URL & Application definitions
 #
-
-# The following three assume the specific WORDPRESS package was downloaded 
-# and then uploaded to our internal server's Packages directory
-# PACKAGE_SERVER=http://10.17.20.62/Packages
-# WORDPRESS=wordpress-5.3.2.tar.gz
-# WORDPRESS_URL=${PACKAGE_SERVER}/${WORDPRESS}
 
 # Download (wget) the latest version directly from the wordpress.org
 # !! Proceed with caution - wget is not always reliable inside bioMerieux
@@ -166,7 +153,7 @@ function InstallBasicPackages
     
     # The following line is not specifically required, but will show you what package
     # is required to install semanage (for SELinux configuration).
-    # It tells you that you need policycoreutils-python-utils
+    # It tells you that you will need policycoreutils-python-utils
     yum whatprovides semanage
     dnf install -y policycoreutils-python-utils
 
@@ -214,7 +201,7 @@ function InstallApache
     systemctl enable --now httpd.service
 
     # Make a stub HTML page
-    echo "<h1>Hello Internet World, this is our Apache web server.</h1>" >> /var/www/html/index.html
+    echo "<h1>Hello Internet World, this is our Apache web server.</h1>" > /var/www/html/index.html
 
     # The following shows the status of httpd.service
     systemctl is-enabled httpd.service
@@ -230,7 +217,6 @@ function InstallDataBase
 {
     echo "Function: InstallDataBase starting"
 
-    #yum -y install mariadb mariadb-server
     dnf module install -y mariadb
 
     # The following displays version information for MariaDB
@@ -248,16 +234,6 @@ function InstallDataBase
 function InstallPhp
 {
     echo "Function: InstallPhp starting"
-
-    # Add the Remi CentOS repository
-#    rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-#
-#    # Install yum-utils because the yum-config-manager is needed
-#    yum -y install yum-utils
-#
-#    # Now install PHP 7.3
-#    yum-config-manager --enable remi-php73
-#    yum -y install php php-opcache
 
     dnf module install -y php:remi-7.4
     
@@ -362,23 +338,13 @@ function InstallWordPress
     cd /var/www/html
     tar -xvf ${WORDPRESS}
 
-    # Remove the original file after extracted
+    # Remove the original file after extracting
     rm -f ${WORDPRESS}
-
-#    COMMENTING these out to just try the WEB Installer.
-#               Seems appropriate because of the KEYs & SALTs.
-#
-#    # Create a live config file from the sample provided
-#    cp wordpress/wp-config-sample.php wordpress/wp-config.php
-#
-#    # Set parameters to match the WordPress database configuration
-#    # See:   '### For WordPress'  section near top of script
-#    sed -i "s/'DB_NAME', 'database_name_here'/'DB_NAME', 'wp_db'/g" /var/www/html/wordpress/wp-config.php
-#    sed -i "s/'DB_USER', 'username_here'/'DB_USER', 'wp_user'/g" /var/www/html/wordpress/wp-config.php
-#    sed -i "s/'DB_PASSWORD', 'password_here'/'DB_PASSWORD', 'wp_secret_pwd'/g" /var/www/html/wordpress/wp-config.php
-    
     cd
 
+# After the script has finished, use the WEB installer to complete installation.
+# Seems appropriate because of the KEYs & SALTs.
+#
     echo "Function: InstallWordPress complete"
 }
 # ------------------------------------------------------------------------
