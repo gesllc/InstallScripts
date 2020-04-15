@@ -1,19 +1,26 @@
 #!/bin/bash
 
-# Define parameters that may change over time....
-APPLICATION_SERVER_URL=http://10.17.20.62/Applications
-# APPLICATION_SERVER_URL=http://10.1.1.26/Applications
+# Definitions to define URLs for downloading Applications
+APPLICATION_SERVER_URL=http://10.1.1.26/Applications
 
-# List of things that are downloaded from internal server
-PY34_SOURCE=${APPLICATION_SERVER_URL}/Python/3.4.4/Python-3.4.4.tgz
+PYTHON_VER=3.8.1
+PYTHON_SRC=Python-${PYTHON_VER}
+PYTHON_PKG=${PYTHON_SRC}.tgz
+PYTHON_URL=${APPLICATION_URL}/Python/${PYTHON_VER}/${PYTHON_PKG}
 
-# SONAR_SCANNER=${APPLICATION_SERVER_URL}/SonarQube/sonar-scanner-cli-3.0.1.733-linux.zip
-SONAR_SCANNER=${APPLICATION_SERVER_URL}/ServerApplications/sonar-scanner-cli-3.0.1.733-linux.zip
+SONAR_VER=3.0.1.733
+SONAR_SCANNER=sonar-scanner-cli-${SONAR_VER}-linux
+SONAR_SCANNER_ZIP=${SONAR_SCANNER}.zip
+SONAR_SCANNER_URL=R{PACKAGE_URL}/Packages/SonarQube/${SONAR_SCANNER_ZIP}
+SONAR_SCANNER_DIR=sonar-scanner-${SONAR_VER}-linux
 
-# SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/se_22000201_installed.tar.gz
-# Define the base name of the tar file so that it can be reused way down below
-SLICK_EDIT=se_24000008_linux64.tar.gz
-SLICK_EDIT_URL=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SLICK_EDIT}
+SLICK_EDIT_VER=2400020
+SLICK_EDIT=se_${SLICK_EDIT_VER}_linux64.tar.gz
+SLICK_EDIT_URL=${APPLICATION_URL}/SlickEdit/Linux/${SLICK_EDIT}
+
+DOXYGEN_VER=1.8.18
+DOXYGEN=doxygen-${DOXYGEN_VER}.src.tar.gz
+DOXYGEN_URL=${APPLICATION_URL}/Doxygen/${DOXYGEN}
 
 ##########################################################################
 # Install additional repositories to assist with virtualization support
@@ -30,7 +37,7 @@ function InstallEpelRepository
 # Normal update...
 function PerformUpdate
 {
-    dnf -y update
+    dnf -y --nobest update
 }
 # ------------------------------------------------------------------------
 
@@ -75,16 +82,13 @@ function InstallDevelopmentApplications
 
     # Install development & test support items
     dnf -y groupinstall "Development Tools"
-    dnf -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel libpng libpng-devel
-    dnf -y install python-devel
+    dnf -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel xz-devel libpng libpng-devel
     dnf -y install cmake
+    dnf -y install flex
+    dnf -y install bison
 
-    # Install graphing helpers for Doxygen
-    dnf -y install graphviz-graphs
-    dnf -y install graphviz-devel
-    dnf -y install graphviz-python
-    dnf -y install graphviz-php
-
+    # NOT available: libpcap-devel
+    # NOT available: python-devel
 }
 # ------------------------------------------------------------------------
 
@@ -110,39 +114,40 @@ function CreateHostShareDirectory
 # Check for the previous installation of Python 3.4, and if not installed,
 # create a working directory (projects), download source package from 
 # internal server, extract, configure, make, install.
-function InstallPython34
+function InstallPython
 {
-echo "Function: InstallPython34"
-if [ -f /usr/local/bin/python3.4 ]; then
-    echo "Executable for Python 3.4 already exists (skipping)"
-else
-    echo "Python 3.4 Executable not in expected path, performing installation"
+    echo "Function: InstallPython"
+    if [ -f /usr/local/bin/python3.8 ]; then
+        echo "Executable for Python 3.8 already exists (skipping)"
+    else
+        echo "Python 3.8 Executable not in expected path, performing installation"
 
-    mkdir projects
-    cd projects
+        mkdir ~/projects
+        cd ~/projects
 
-    # Use wget to pull the Python package
-    wget ${PY34_SOURCE}
+        # Use wget to pull the Python package
+        wget ${PYTHON_URL}
 
-    # Unpack, configure and make Python 3.4
-    tar xzf Python-3.4.4.tgz
-    cd ~/projects/Python-3.4.4
-    ./configure
-    make
+        # Unpack, configure and make Python 3.4
+        tar xzf ${PYTHON_PKG}
+        cd ~/projects/${PYTHON_SRC}
 
-    # Install Python into /usr/local/bin
-    make altinstall
+        ./configure --enable-optimizations
+        make
 
-    # Return to home directory and remove the Python installation directory tree
-    cd
-    rm -Rf projects
+        # Install Python into /usr/local/bin
+        make altinstall
 
-    # Add an alias for Python 3.4 to avoid needing to enter /usr/local/bin/python3.4
-    echo 'alias py34="/usr/local/bin/python3.4"' >> /home/developer/.bashrc  
+        # Return to home directory and remove the Python installation directory tree
+        cd
+        rm -Rf ~/projects
 
-fi
+        # Add an alias for Python 3.8 to avoid needing to enter /usr/local/bin/python3.8
+        echo 'alias py38="/usr/local/bin/python3.8"' >> /home/developer/.bashrc  
+
+    fi
 }
-# End of Python 3.4 configuration section
+# End of Python installation section
 # ------------------------------------------------------------------------
 
 ##########################################################################
@@ -463,16 +468,19 @@ function InstallSqliteStudio
 #        which is a really, really long time.
 systemctl stop packagekit
 
+PerformUpdate
+InstallDevelopmentApplications
+InstallPython
+
 # Note that installing EPEL seems to work best BEFORE updating
 InstallEpelRepository      # Enables the EPEL repository 
 # InstallDKMS                # REQUIRES EPEL Repository Installs DKMS (for virtualization support)
 InstallFilezilla           # REQUIRES EPEL Repository Installs FileZilla
 
 # DisableSELinux
-PerformUpdate
-InstallDevelopmentApplications
+
 # CreateHostShareDirectory
-InstallPython34
+
 InstallPythonExtensions
 InstallCPPUnit
 InstallSonarScanner
