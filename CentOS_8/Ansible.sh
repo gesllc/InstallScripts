@@ -133,13 +133,11 @@ function InstallTower
     pushd ${TOWER}
     
     # Setup actions that must be performed before running setup.sh
-    #sed -i "s/pg_host=''/pg_host='localhost'/g" ./inventory
-    #sed -i "s/pg_port=''/pg_port='5432'/g" ./inventory
-    sed -i "s/admin_password=''/admin_password='biomerieux'/g" ./inventory
-    sed -i "s/pg_password=''/pg_password='biomerieux'/g" ./inventory
-    sed -i "s/rabbitmq_password=''/rabbitmq_password='biomerieux'/g" ./inventory
+    sed -i "s/admin_password=''/admin_password='holstein'/g" ./inventory
+    sed -i "s/pg_password=''/pg_password='holstein'/g" ./inventory
+    sed -i "s/rabbitmq_password=''/rabbitmq_password='holstein'/g" ./inventory
     
-    # ./setup.sh
+    ./setup.sh
     
     popd
     popd
