@@ -11,7 +11,9 @@
 TOWER_VER=3.6.4-1
 OS=el8
 EXT=.tar.gz
-TOWER_PKG=ansible-tower-setup-bundle-${TOWER_VER}.${OS}${EXT}
+
+TOWER=ansible-tower-setup-bundle-${TOWER_VER}.${OS}
+TOWER_PKG=${TOWER}${EXT}
 TOWER_URL=https://releases.ansible.com/ansible-tower/setup-bundle/${TOWER_PKG}
 
 
@@ -121,8 +123,18 @@ function InstallPostgreSQL
 #
 function InstallTower
 {
+    mkdir ~/work
+    pushd ~/work
+    
     wget ${TOWER_URL}
-
+    tar xvf ${TOWER_PKG}
+    pushd ${TOWER}
+    
+    # ./setup.sh
+    
+    popd
+    popd
+    
 }
 # -------------------------------------------------------------------
 
