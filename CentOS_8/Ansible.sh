@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# https://www.ansible.com/resources/videos/quick-start-video
+# 1.) Enable 'Extras' ad 'Optional' yum repos
+# 2.) Install Ansible
+# 
+# docs.ansible.com/ansible/intro_installation.html
+# 
+
 # https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-3.6.4-1.el8.tar.gz
 TOWER_VER=3.6.4-1
 OS=el8
@@ -13,10 +20,9 @@ TOWER_URL=https://releases.ansible.com/ansible-tower/setup-bundle/${TOWER_PKG}
 # PackageKit can frequently interfere with the installation/update mechanism. 
 # Consider disabling or removing PackageKit if installed prior to running the 
 # setup process.
-function DisablePackageKit
+function StopPackageKit
 {
-    echo 'Disabling PackageKit'
-
+    echo 'Stopping PackageKit'
     systemctl stop packagekit
 }
 # -------------------------------------------------------------------
@@ -44,7 +50,15 @@ function InstallEpel
 #
 function InstallAnsible
 {
-    dnf install ansible
+    # Install directly from repositories
+    # dnf install ansible
+    
+    # Or an interesting alternative is to create an RPM
+    git clone https://github.com/ansible/ansible.git
+    cd ./ansible
+    make rpm
+    sudo rpm -Uvh ./rpm-build/ansible-*.noarch.rpm
+        
     ansible --version
 }
 # -------------------------------------------------------------------
@@ -111,8 +125,6 @@ function InstallTower
 }
 # -------------------------------------------------------------------
 
-
-
 # ===================================================================
 #
 function MyFunction
@@ -120,7 +132,6 @@ function MyFunction
     echo 'Function sample'
 }
 # -------------------------------------------------------------------
-
 
 # ====================================================================================
 # ====================================================================================
@@ -133,15 +144,12 @@ function MyFunction
 ##########################################################################
 # NOTE - First must stop PackageKit or you will hang until it times out
 #        which is a really, really long time.
-
-
-DisablePackageKit
+StopPackageKit
 PerformUpdate
-InstallEpel
 
-## InstallAnsible   # <= Included in Tower package
-
-InstallPostgreSQL
+# InstallEpel         # <= Handled by Tower package
+# InstallAnsible      # <= Included in Tower package
+# InstallPostgreSQL   # <= Included in Tower package
 
 InstallTower
 
