@@ -29,8 +29,9 @@ function StopPackageKit
 
 # ===================================================================
 #
-function PerformUpdate
+function InstallToolsAndUpdate
 {
+    dnf -y install git
     dnf -y update
 }
 # -------------------------------------------------------------------
@@ -145,7 +146,7 @@ function MyFunction
 # NOTE - First must stop PackageKit or you will hang until it times out
 #        which is a really, really long time.
 StopPackageKit
-PerformUpdate
+InstallToolsAndUpdate
 
 # InstallEpel         # <= Handled by Tower package
 # InstallAnsible      # <= Included in Tower package
