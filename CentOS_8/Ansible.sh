@@ -35,6 +35,7 @@ function InstallToolsAndUpdate
 {
     dnf -y install git
     dnf -y install wget
+    dnf -y install rsync
     dnf -y update
 }
 # -------------------------------------------------------------------
@@ -130,6 +131,13 @@ function InstallTower
     wget ${TOWER_URL}
     tar xvf ${TOWER_PKG}
     pushd ${TOWER}
+    
+    # Setup actions that must be performed before running setup.sh
+    sed -i "s/pg_host=''/pg_host='localhost'/g" ./inventory
+    sed -i "s/pg_port=''/pg_port='5432'/g" ./inventory
+    sed -i "s/admin_password=''/admin_password='biomerieux'/g" ./inventory
+    sed -i "s/pg_password=''/pg_password='biomerieux'/g" ./inventory
+    sed -i "s/rabbitmq_password=''/rabbitmq_password='biomerieux'/g" ./inventory
     
     # ./setup.sh
     
