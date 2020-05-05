@@ -12,8 +12,8 @@ TOWER_VER=3.6.4-1
 OS=el8
 EXT=.tar.gz
 
-TOWER=ansible-tower-setup-bundle-${TOWER_VER}.${OS}
-TOWER_PKG=${TOWER}${EXT}
+TOWER=ansible-tower-setup-bundle-${TOWER_VER}
+TOWER_PKG=${TOWER}.${OS}${EXT}
 TOWER_URL=https://releases.ansible.com/ansible-tower/setup-bundle/${TOWER_PKG}
 
 
@@ -34,6 +34,7 @@ function StopPackageKit
 function InstallToolsAndUpdate
 {
     dnf -y install git
+    dnf -y install wget
     dnf -y update
 }
 # -------------------------------------------------------------------
