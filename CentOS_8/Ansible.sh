@@ -5,7 +5,23 @@
 # 2.) Install Ansible
 # 
 # docs.ansible.com/ansible/intro_installation.html
-# 
+#
+# The O'Reilly Tutorial Book makes use of Vagrant commands, which
+# haha, requires VirtualBox.  So an attempt was made to install &
+# run VB using the following block of commands.  It of course fails,
+# as does VirtualBox in most other environments.
+#
+# wget https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.rpm
+# wget https://download.virtualbox.org/virtualbox/rpm/el/virtualbox.repo
+# mv virtualbox.repo /etc/yum.repos.d/
+# wget -q https://www.virtualbox.org/download/oracle_vbox.asc
+# rpm --import oracle_vbox.asc
+# dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+# dnf -y install binutils kernel-devel kernel-headers libgomp make patch gcc glibc-headers glibc-devel dkms
+# dnf install -y VirtualBox-6.1
+# usermod -aG vboxusers developer
+# /usr/lib/virtualbox/vboxdrv.sh setup  <= Fails
+
 
 # https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-3.6.4-1.el8.tar.gz
 TOWER_VER=3.6.4-1
