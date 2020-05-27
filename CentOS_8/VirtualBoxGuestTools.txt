@@ -2,7 +2,9 @@ yum -y update
 Reboot
 
 uname -r
-Subsitute the output of uname -r in the command below:
+Substitute the output of uname -r in the command below:
 yum -y install kernel-devel-$(uname -r) kernel-headers perl gcc make elfutils-libelf-devel
 
 After the above, reboot and Guest Additions seemed to be working fine.
+
+
