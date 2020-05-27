@@ -114,6 +114,11 @@ function CreateHostShareDirectory
 # Check for the previous installation of Python 3.4, and if not installed,
 # create a working directory (projects), download source package from 
 # internal server, extract, configure, make, install.
+#
+# Note: Also take a peek at this website, has good explanation of ./configure
+#       that may be advisable moving forward.
+# https://danieleriksson.net/2017/02/08/how-to-install-latest-python-on-centos/
+#
 function InstallPython
 {
     echo "Function: InstallPython"

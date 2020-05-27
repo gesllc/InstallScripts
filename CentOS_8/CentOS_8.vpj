@@ -54,6 +54,7 @@
             Name="Source Files"
             Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.c++;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.scala;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl;*.d;*.m;*.mm;*.go;*.groovy;*.gsh"
             GUID="{11DD4879-3BC6-4128-875A-592E757B84E3}">
+            <F N="Ansible.sh"/>
             <F N="DevelopmentToolsInstallation.sh"/>
             <F N="DockerInstallation.sh"/>
             <F N="InstallLampServer.sh"/>
