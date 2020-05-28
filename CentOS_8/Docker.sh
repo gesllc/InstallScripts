@@ -36,17 +36,17 @@ function InstallDocker
     dnf -y install docker-ce-3:18.09.1-3.el7
 
     # Setup firewall ports
-    firewall-cmd --permanent --add-port=6443/tcp
-    firewall-cmd --permanent --add-port=2379-2380/tcp
-    firewall-cmd --permanent --add-port=10250/tcp
-    firewall-cmd --permanent --add-port=10251/tcp
-    firewall-cmd --permanent --add-port=10252/tcp
-    firewall-cmd --permanent --add-port=10255/tcp
-    firewall-cmd –reload
+    #firewall-cmd --permanent --add-port=6443/tcp
+    #firewall-cmd --permanent --add-port=2379-2380/tcp
+    #firewall-cmd --permanent --add-port=10250/tcp
+    #firewall-cmd --permanent --add-port=10251/tcp
+    #firewall-cmd --permanent --add-port=10252/tcp
+    #firewall-cmd --permanent --add-port=10255/tcp
+    #firewall-cmd –reload
 
-    modprobe br_netfilter
+    #modprobe br_netfilter
 
-    echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+    #echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
 
     # Start and enable Docker
     systemctl enable --now docker
@@ -55,8 +55,8 @@ function InstallDocker
     usermod --append --groups docker developer
 
     # Setup repository, then install containerd.io package
-    dnf -y install https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
-    dnf -y install docker-ce
+    #dnf -y install https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
+    #dnf -y install docker-ce
 
 }
 
