@@ -7,6 +7,13 @@ function PerformUpdate
 }
 
 # ====================================================================================
+function InstallApplications
+{
+    yum -y install git
+    yum -y install tree
+}
+
+# ====================================================================================
 function InstallDocker
 {
     # Remove previously installed versions (if any)
@@ -46,8 +53,6 @@ EOF
     systemctl enable --now kubelet
 }
 
-
-
 # ====================================================================================
 # ====================================================================================
 # ====================================================================================
@@ -62,6 +67,7 @@ EOF
 systemctl stop packagekit
 
 PerformUpdate
+InstallApplications
 InstallDocker
 # InstallKubernetes
 
