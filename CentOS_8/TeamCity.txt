@@ -6,7 +6,7 @@ yum -y install wget unzip rsync java-1.8.0-openjdk-headless
 shutdown -h now
 
 # Add secondary drive for data (in ESXi)
-# Used 100 GB for drive size, THICK Provision for database
+# Used 70 GB for drive size, THICK Provision for database
 # Reboot & log in as root
 
 fdisk /dev/sdb
@@ -30,10 +30,33 @@ export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
 # Reboot, after rebooting, log in as root and confirm secondary drive is present:
 df -h
 
-# Revisit time configuration
+# Revisit time configuration (installed and active by default with CentOS 8)
 yum -y install chrony
 systemctl start chronyd
 systemctl enable chronyd
 
-** Note bmx servers 
+** Note bmx servers need to be edited to use the internal bmx NTP server
+
+# 
+# Open the necessary ports for web services
+firewall-cmd --zone=public --permanent --add-port=8111/tcp
+firewall-cmd --reload
+
+# Install MariaDB
+dnf -y install mariadb-server
+systemctl start mariadb
+systemctl status mariadb <<== Should show "active (running)"
+
+systemctl enable mariadb
+
+# Securing DB
+mysql_secure_installation
+
+mysqladmin -u root -p version
+# Set root password = Cs..44, yes to all others
+
+mysqladmin -u root -p version
+
+
+
 
