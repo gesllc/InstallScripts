@@ -161,31 +161,6 @@ function InstallBasicPackages
 }
 
 ##########################################################################
-#
-function AddBioMerieuxHostNames
-{
-    echo "Function: AddBioMerieuxHostNames starting"
-
-    if grep -q usstlweb01 /etc/hosts; then
-        echo "usstlweb01 entry already exists in /etc/hosts (skipping)"
-    else
-        echo "Adding usstlweb01 to /etc/hosts (Subversion server)"
-        echo '10.17.20.60   usstlweb01  usstlweb01.us.noam.biomerieux.net    # Prototype Web Server' >> /etc/hosts
-    fi
-
-    if grep -q usstlweb02 /etc/hosts; then
-        echo "usstlweb02 entry already exists in /etc/hosts (skipping)"
-    else
-        echo "Adding usstlweb02 to /etc/hosts (Subversion server)"
-        echo '10.17.20.62   usstlweb02  usstlweb02.us.noam.biomerieux.net    # Engineering Web Server' >> /etc/hosts
-    fi
-
-    echo "Function: AddBioMerieuxHostNames complete"
-}
-# ------------------------------------------------------------------------
-
-
-##########################################################################
 # Install and setup Apache
 #
 function InstallApache
@@ -386,6 +361,4 @@ InstallApache
 InstallPhpMyAdmin
 
 InstallWordPress
-
-AddBioMerieuxHostNames
 
