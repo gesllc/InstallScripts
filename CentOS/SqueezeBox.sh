@@ -41,10 +41,10 @@
 
 # The Squeezebox Server is stored on internal server
 # Define parameters that may change over time....
-APPLICATION_SERVER_URL=http://devserver/Applications/Logitech/
+APPLICATION_SERVER_URL=http://10.1.1.26/Applications/Logitech/
 MEDIASERVER_RPM=logitechmediaserver-7.9.3-1.noarch.rpm
 
-SQUEEZEBOX=${APPLICATION_SERVER_URL}/ServerApplications/${MEDIASERVER_RPM}
+SQUEEZEBOX=${APPLICATION_SERVER_URL}/${MEDIASERVER_RPM}
 
 # Perform update and install the necessary support applications
 # ====================================================================
