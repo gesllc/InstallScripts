@@ -1,52 +1,48 @@
 #!/bin/bash
 
-# Must install subversion before running this script (so it can be exported)
-# yum -y install subversion
+# 20201003 - Modified for CentOS 8 to reinstall on esximgmt
+#
+# Created base VM using:
+# 2 CPUs
+# 2 MB Ram
+# 30 GB hard drive - thin provisioned
+#
+# After installation, shutdown and added secondary HD
+# 500 GB - thin provisioned
+#
+# Prepare secondary drive as followws:
+# fdisk /dev/sdb
+# n (to create a new partition)
+# p (to make primary partition)
+# 1 (select partition 1)
+# Enter 1 to start format at cylinder 1, or enter first cylinder available
+# Enter (default to last cylinder to use all space)
+# w (write partition table & exit)
+
+# Format the drive partition created above
+# mkfs -t ext4 /dev/sdb1
+
+# Edit /etc/fstab & add:
+# /dev/sdb1 /media ext4  defaults  1 1
+#
+# Reboot and confirm secondary drive is present using
+# df -h 
+#
+# Must also install wget to be able to get this script from internal web server
+#
 
 # Server log file is:  /var/log/squeezeboxserver/server.log 
-
-# From Centos support
-# sudo rpm -Uvh http://repos.slimdevices.com/yum/squeezecenter/release/squeezecenter-repo-1-6.noarch.rpm
-# yum install logitechmediaserver lame glib.i686
-# ln -s /usr/lib/perl5/vendor_perl/Slim /usr/lib64/perl5/Slim
-# yum install perl-Time-HiRes perl-CGI
 
 # The following are from the slimdevices web site
 # id squeezeboxserver
 # ln -s -T /usr/lib/perl5/vendor_perl/Slim /usr/share/perl5/vendor_perl/Slim
 # service logitechmediaserver start
 
-# First pass output from df -h
-# Filesystem               Size  Used Avail Use% Mounted on
-# /dev/mapper/centos-root   50G  1.6G   49G   4% /
-# devtmpfs                 1.9G     0  1.9G   0% /dev
-# tmpfs                    1.9G     0  1.9G   0% /dev/shm
-# tmpfs                    1.9G  8.9M  1.9G   1% /run
-# tmpfs                    1.9G     0  1.9G   0% /sys/fs/cgroup
-# /dev/sda1               1014M  184M  831M  19% /boot
-# /dev/mapper/centos-home  345G  169G  177G  49% /home
-# tmpfs                    380M     0  380M   0% /run/user/0
-
-# NOTE the above did not work because the only partition that had room
-#      for the music files was /home, so the music files were experimentally
-#      placed in /home/admin/Music.  The server cannot access that directory.
-#
-# Edited the default partition, creating /opt with a capacity of ~370G below
-#
-# Filesystem                      Size  Used Avail Use% Mounted on
-# /dev/mapper/centos_apollo-root   24G  1.6G   23G   7% /
-# devtmpfs                        1.9G     0  1.9G   0% /dev
-# tmpfs                           1.9G     0  1.9G   0% /dev/shm
-# tmpfs                           1.9G  8.9M  1.9G   1% /run
-# tmpfs                           1.9G     0  1.9G   0% /sys/fs/cgroup
-# /dev/sda1                       2.0G  172M  1.9G   9% /boot
-# /dev/mapper/centos_apollo-opt   370G   33M  370G   1% /opt
-# tmpfs                           380M     0  380M   0% /run/user/0
 
 # The Squeezebox Server is stored on internal server
 # Define parameters that may change over time....
-APPLICATION_SERVER_URL=http://10.1.1.32/Applications
-MEDIASERVER_RPM=logitechmediaserver-7.7.7-0.1.1538026719.noarch.rpm
+APPLICATION_SERVER_URL=http://devserver/Applications/Logitech/
+MEDIASERVER_RPM=logitechmediaserver-7.9.3-1.noarch.rpm
 
 SQUEEZEBOX=${APPLICATION_SERVER_URL}/ServerApplications/${MEDIASERVER_RPM}
 
@@ -89,10 +85,12 @@ systemctl enable squeezeboxserver
 usermod -g squeezeboxserver admin
 
 # Create Playlist directory, and update its permissions
-# NOTE - will also need to change permissions on music directory 
-#        after music files are uploaded 
-mkdir /opt/Playlists
-chown -R admin:squeezeboxserver /opt/Playlists
+mkdir /media/Playlists
+chown -R admin:squeezeboxserver /media/Playlists
+
+# Create MusicCollection directory, and update its permissions
+mkdir /media/MusicCollection
+chown -R admin:squeezeboxserver /media/MusicCollection
 
 # Optional step: 
 # If you want to enable the transcoding feature in LMS, you'll have to install the LAME MP3 encoder. 
@@ -105,7 +103,6 @@ chown -R admin:squeezeboxserver /opt/Playlists
 # Make some updates to /etc/hosts for networking
 echo '' >> /etc/hosts
 echo '# Local IP addresses' >> /etc/hosts
-echo '10.1.1.42    atomant.gomezengineering.lan               atomant         #Linux Atom System' >> /etc/hosts
 echo '10.1.1.45    porker.gomezengineering.lan                porker          #NetGear ReadyNAS' >> /etc/hosts
 echo '' >> /etc/hosts
 
