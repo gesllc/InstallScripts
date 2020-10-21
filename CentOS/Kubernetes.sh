@@ -1,4 +1,7 @@
 
+# Copied from CentOS 7 area
+# Modifying to work with CentOS 8
+
 # From: https://myopswork.com/how-to-install-kubernetes-k8-in-rhel-or-centos-in-just-7-steps-2b78331174a5
 # ====================================================================================
 function PerformUpdate
@@ -15,18 +18,22 @@ function InstallApplications
 }
 
 # ====================================================================================
+# NOTE that RHEL uses the open source replicant of Docker (podman Pod Manager)
+#      The install steps here are from:
+#      https://podman.io/getting-started/installation
+#
+#      https://www.tecmint.com/create-local-yum-repository-on-centos-8/
+#
 function InstallDocker
 {
-    # Remove previously installed versions (if any)
-    yum -y remove docker*
-    
-    # Install docker using curl
-    curl -fsSl https://get.docker.com/ | sh
-    
-    # Setup standard user access
-    usermod --append --groups docker developer
-    
-    systemctl enable --now docker
+    # CentOS 8
+    sudo dnf -y module disable container-tools
+    sudo dnf -y install 'dnf-command(copr)'
+    sudo dnf -y copr enable rhcontainerbot/container-selinux
+    sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo \
+        https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
+
+    sudo dnf -y install podman
 }
 
 # ====================================================================================
