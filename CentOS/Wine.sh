@@ -16,8 +16,8 @@ dnf clean all
 dnf update
 
 # Install basics
-dnf groupinstall 'Development Tools'
-dnf install libX11-devel zlib-devel libxcb-devel libxslt-devel libgcrypt-devel libxml2-devel gnutls-devel libpng-devel libjpeg-turbo-devel libtiff-devel gstreamer1-devel dbus-devel fontconfig-devel freetype-devel 
+dnf -y groupinstall 'Development Tools'
+dnf -y install libX11-devel zlib-devel libxcb-devel libxslt-devel libgcrypt-devel libxml2-devel gnutls-devel libpng-devel libjpeg-turbo-devel libtiff-devel gstreamer1-devel dbus-devel fontconfig-devel freetype-devel 
 
 # Download Wine source (other examples shows using /usr/src, probably doesn't matter)
 cd /opt
