@@ -111,7 +111,7 @@ function CreateHostShareDirectory
 # ------------------------------------------------------------------------
 
 ##########################################################################
-# Check for the previous installation of Python 3.4, and if not installed,
+# Check for the previous installation of Python 3.8, and if not installed,
 # create a working directory (projects), download source package from 
 # internal server, extract, configure, make, install.
 #
@@ -133,7 +133,7 @@ function InstallPython
         # Use wget to pull the Python package
         wget ${PYTHON_URL}
 
-        # Unpack, configure and make Python 3.4
+        # Unpack, configure and make Python 3.8
         tar xzf ${PYTHON_PKG}
         cd ~/projects/${PYTHON_SRC}
 
@@ -156,20 +156,20 @@ function InstallPython
 # ------------------------------------------------------------------------
 
 ##########################################################################
-# Install additional Python libraries USING PROXIES (Required in bioMerieux) 
+# Install additional Python libraries 
 # Items previously installed will be skipped
 function InstallPythonExtensions
 {
     echo "Function: InstallPythonExtensions"
 
     # The no proxy version
-    /usr/local/bin/pip3.4 install --upgrade pip setuptools
-    /usr/local/bin/pip3.4 install numpy
-    /usr/local/bin/pip3.4 install matplotlib
-    /usr/local/bin/pip3.4 install cython
-    /usr/local/bin/pip3.4 install pexpect
-    /usr/local/bin/pip3.4 install robotframework
-    /usr/local/bin/pip3.4 install pyusb
+    /usr/local/bin/pip3.8 install --upgrade pip setuptools
+    /usr/local/bin/pip3.8 install numpy
+    /usr/local/bin/pip3.8 install matplotlib
+    /usr/local/bin/pip3.8 install cython
+    /usr/local/bin/pip3.8 install pexpect
+    /usr/local/bin/pip3.8 install robotframework
+    /usr/local/bin/pip3.8 install pyusb
 }
 # End of Python extension library installation section
 # ------------------------------------------------------------------------
@@ -487,9 +487,9 @@ InstallFilezilla           # REQUIRES EPEL Repository Installs FileZilla
 # CreateHostShareDirectory
 
 InstallPythonExtensions
-InstallCPPUnit
-InstallSonarScanner
-InstallGoogleChrome
+# InstallCPPUnit
+# InstallSonarScanner
+# InstallGoogleChrome
 InstallMingw32
 # InstallSqliteStudio
 PrepareSlickEdit
