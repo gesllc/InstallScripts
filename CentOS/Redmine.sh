@@ -47,10 +47,12 @@ function InstallRuby
     
     # Need to enable Power Tools repository for libyaml-devel and iconv-devel
     sed --in-place 's/enabled=0/enabled=1/' /etc/yum.repos.d/CentOS-Linux-PowerTools.repo
+    
+    rpm -ivh https://forensics.cert.org/centos/cert/8/x86_64/libiconv-devel-1.15-1.el8.x86_64.rpm
 
     yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel \
         libyaml-devel libffi-devel openssl-devel make \
-        bzip2 autoconf automake libtool bison iconv-devel sqlite-devel
+        bzip2 autoconf automake libtool bison sqlite-devel
 
     curl -sSL https://rvm.io/mpapis.asc | gpg --import -
     curl -L get.rvm.io | bash -s stable
