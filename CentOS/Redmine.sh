@@ -55,7 +55,7 @@ function InstallRuby
         bzip2 autoconf automake libtool bison sqlite-devel
 
     curl -sSL https://rvm.io/mpapis.asc | gpg --import -  
-    curl -L https://get.rvm.io | bash -s stable
+    curl -L https://get.rvm.io | bash
     
     source /etc/profile.d/rvm.sh
     rvm reload
