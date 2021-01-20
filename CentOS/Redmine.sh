@@ -107,7 +107,7 @@ function InstallPhp
 ##########################################################################
 function InstallRedmine
 {
-    cd /home/developer
+    pushd /home/developer
 
     # Use wget to pull the Python package
     wget ${REDMINE_URL}
@@ -118,6 +118,11 @@ function InstallRedmine
     export REDMINE_PATH=/home/developer/${REDMINE_SRC}
     cd ${REDMINE_PATH}
     cp config/database.yml.example config/database.yml
+    chown developer:developer config/database.yml
+
+    rm -f ${REDMINE_PKG}
+
+    popd
 }
 # ------------------------------------------------------------------------
 
