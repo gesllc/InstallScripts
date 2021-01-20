@@ -9,7 +9,7 @@ APPLICATION_SERVER_URL=http://10.1.1.26/Applications
 REDMINE_VER=4.1.1
 REDMINE_SRC=redmine-${REDMINE_VER}
 REDMINE_PKG=${REDMINE_SRC}.tar.gz
-REDMINE_URL=${APPLICATION_URL}/Redmine/${REDMINE_PKG}
+REDMINE_URL=${APPLICATION_SERVER_URL}/Redmine/${REDMINE_PKG}
 
 
 ##########################################################################
