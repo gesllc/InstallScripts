@@ -1,21 +1,15 @@
-
 #!/bin/bash
+
+# Redmine installation script based on (with liberties for use on CentOS 8
+# https://redmine.org/projects/redmine/wiki/Install_Redmine_346_on_Centos_75
 
 # Definitions to define URLs for downloading Applications
 APPLICATION_SERVER_URL=http://10.1.1.26/Applications
-
-#PYTHON_VER=3.8.1
-#PYTHON_SRC=Python-${PYTHON_VER}
-#PYTHON_PKG=${PYTHON_SRC}.tgz
-#PYTHON_URL=${APPLICATION_URL}/Python/${PYTHON_VER}/${PYTHON_PKG}
 
 REDMINE_VER=4.1.1
 REDMINE_SRC=redmine-${REDMINE_VER}
 REDMINE_PKG=${REDMINE_SRC}.tar.gz
 REDMINE_URL=${APPLICATION_URL}/Redmine/${REDMINE_PKG}
-
-
-
 
 
 ##########################################################################
@@ -25,7 +19,6 @@ function PerformUpdate
     dnf -y update
 }
 # ------------------------------------------------------------------------
-
 
 ##########################################################################
 # Install and setup MariaDB
@@ -68,8 +61,6 @@ function InstallRuby
     echo "Function: InstallRuby complete"
 }    
 # ------------------------------------------------------------------------
-
-
 
 
 ##########################################################################
@@ -135,7 +126,7 @@ PerformUpdate
 # InstallDataBase
 # InstallRuby
 
-# InstallPhp
+# InstallPhp # May not be needed
 
 # InstallRedmine
 
