@@ -117,7 +117,7 @@ function InstallRedmine
 
     export REDMINE_PATH=/home/developer/${REDMINE_SRC}
     cd ${REDMINE_PATH}
-    cp config/dtabase.yml.example config/database.yml
+    cp config/database.yml.example config/database.yml
 }
 # ------------------------------------------------------------------------
 
