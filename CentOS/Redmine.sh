@@ -44,6 +44,9 @@ function InstallDataBase
 function InstallRuby
 {
     echo "Function: InstallRuby starting"
+    
+    # Need to enable Power Tools repository for libyaml-devel and iconv-devel
+    sed --in-place 's/enabled=0/enabled=1/' /etc/yum.repos.d/CentOS-Linux-PowerTools.repo
 
     yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel \
         libyaml-devel libffi-devel openssl-devel make \
