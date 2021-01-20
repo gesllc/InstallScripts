@@ -21,6 +21,15 @@ function PerformUpdate
 # ------------------------------------------------------------------------
 
 ##########################################################################
+# 
+function InstallBasicApplications
+{
+    dnf -y install git
+    dnf -y install wget
+}
+# ------------------------------------------------------------------------
+
+##########################################################################
 # Install and setup MariaDB
 #
 function InstallDataBase
@@ -128,6 +137,7 @@ function InstallRedmine
 systemctl stop packagekit
 
 PerformUpdate
+InstallBasicApplications
 
 # InstallDataBase
 # InstallRuby
