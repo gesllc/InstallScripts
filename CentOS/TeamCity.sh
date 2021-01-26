@@ -7,6 +7,8 @@
 # 8 GB Ram
 # 25 GB hard drive - thin provisioned
 #
+# Perform minimal installation
+# 
 # After installation, shutdown and added secondary HD
 # 70 GB - Thick provisioned
 #
@@ -31,57 +33,29 @@
 # Reboot and confirm secondary drive is present using
 # df -h 
 #
-# Must also install wget to be able to get this script from internal web server
+# Run the following commands
+# yum -y update
+# yum -y install open-vm-tools
+# yum -y install wget unzip rsync java-1.8.0-openjdk-headless
 #
 
-# Server log file is:  /var/log/squeezeboxserver/server.log 
+# The TeamCity Server package is stored on internal server
+APPLICATION_SERVER_URL=http://10.1.1.26/Applications/TeamCity/
 
-# The following are from the slimdevices web site
-# id squeezeboxserver
-# ln -s -T /usr/lib/perl5/vendor_perl/Slim /usr/share/perl5/vendor_perl/Slim
-# service logitechmediaserver start
-
-
-# The Squeezebox Server is stored on internal server
-# Define parameters that may change over time....
-APPLICATION_SERVER_URL=http://10.1.1.26/Applications/Logitech/
-MEDIASERVER_RPM=logitechmediaserver-7.9.3-1.noarch.rpm
-
-SQUEEZEBOX=${APPLICATION_SERVER_URL}/${MEDIASERVER_RPM}
+TC_VERSION=2020.2.1
+TC_EXT=.tar.gz
+TC_SRC=TeamCity-${TC_VERSION}
+TC_PKG=${TC_SRC}${TC_EXT}
+TC_URL=${APPLICATION_SERVER_URL}/R{TC_PKG}
 
 
 
 
 
-yum -y update
-yum -y install open-vm-tools
-yum -y install wget unzip rsync java-1.8.0-openjdk-headless
-shutdown -h now
 
-# Add secondary drive for data (in ESXi)
-# Used 70 GB for drive size, THICK Provision for database
-# Reboot & log in as root
-
-fdisk /dev/sdb
-n (to create a new partition)
-p (to make this the primary partition)
-1 (select partition 1)
-Enter 1 to start format at cylinder 1, or enter first cylinder available
-Enter (default to last cylinder to use all space)
-w (write partition table & exit)
-
-# Format the drive partition created above
-mkfs -t ext4 /dev/sdb1
-mkdir /external
-
-# Edit /etc/fstab & add:
-/dev/sdb1 /external ext4  defaults  1 1
 
 # Edit /home/admin/.bashrc & add the following to the end of the file:
 export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
-
-# Reboot, after rebooting, log in as root and confirm secondary drive is present:
-df -h
 
 
 # 
@@ -104,6 +78,36 @@ mysqladmin -u root -p version
 
 mysqladmin -u root -p version
 
+##########################################################################
+#
+PerformUpdate
+
+# ------------------------------------------------------------------------
+
+##########################################################################
+#
+InstallMariaDb
+
+# ------------------------------------------------------------------------
+
+##########################################################################
+# 
+InstallTeamCity
+
+# ------------------------------------------------------------------------
 
 
+# ====================================================================================
+# ====================================================================================
+# ====================================================================================
+#
+# Script execution begins here
+#
+# ====================================================================================
+
+##########################################################################
+
+PerformUpdate
+InstallMariaDb
+InstallTeamCity
 
