@@ -36,64 +36,71 @@
 # Run the following commands
 # yum -y update
 # yum -y install open-vm-tools
-# yum -y install wget unzip rsync java-1.8.0-openjdk-headless
+# yum -y install git wget unzip rsync java-1.8.0-openjdk-headless
 #
+# Post installation DB setup
+# mysql_secure_installation
+# mysqladmin -u root -p version
+# Set root password = Cs..44, yes to all others
+# 
+# mysqladmin -u root -p version
+
+# Edit /home/admin/.bashrc & add the following to the end of the file:
+# export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
 
 # The TeamCity Server package is stored on internal server
-APPLICATION_SERVER_URL=http://10.1.1.26/Applications/TeamCity/
+APPLICATION_SERVER_URL=http://10.1.1.26/Applications/TeamCity
 
 TC_VERSION=2020.2.1
 TC_EXT=.tar.gz
 TC_SRC=TeamCity-${TC_VERSION}
 TC_PKG=${TC_SRC}${TC_EXT}
-TC_URL=${APPLICATION_SERVER_URL}/R{TC_PKG}
-
-
-
-
-
-
-
-# Edit /home/admin/.bashrc & add the following to the end of the file:
-export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
-
-
-# 
-# Open the necessary ports for web services
-firewall-cmd --zone=public --permanent --add-port=8111/tcp
-firewall-cmd --reload
-
-# Install MariaDB
-dnf -y install mariadb-server
-systemctl start mariadb
-systemctl status mariadb <<== Should show "active (running)"
-
-systemctl enable mariadb
-
-# Securing DB
-mysql_secure_installation
-
-mysqladmin -u root -p version
-# Set root password = Cs..44, yes to all others
-
-mysqladmin -u root -p version
+TC_URL=${APPLICATION_SERVER_URL}/${TC_PKG}
 
 ##########################################################################
 #
-PerformUpdate
-
+function PerformUpdate
+{
+    yum -y update
+}
 # ------------------------------------------------------------------------
 
 ##########################################################################
 #
-InstallMariaDb
+function InstallMariaDb
+{
+    echo "Function: InstallMariaDb starting"
 
+    dnf -y module install mariadb
+    rpm -qi mariadb-server
+    systemctl enable --now mariadb
+
+    echo "Function: InstallDataBase complete"
+}
 # ------------------------------------------------------------------------
 
 ##########################################################################
 # 
-InstallTeamCity
+function InstallTeamCity
+{
+    echo "Function: InstallTeamCity starting"
 
+    wget ${TC_URL} --directory-prefix /opt
+
+    pushd /opt
+
+    ls -al
+
+    echo ${TC_PKG}
+    tar xvf ${TC_PKG}
+    rm -f ${TC_PKG}
+
+    chown -R admin:admin /opt/TeamCity
+
+    popd
+
+    echo "Function: InstallTeamCity complete"
+}
 # ------------------------------------------------------------------------
 
 
