@@ -98,6 +98,10 @@ function InstallTeamCity
     chown -R admin:admin /opt/TeamCity
 
     popd
+    
+    # Open the necessary ports for web services
+    firewall-cmd --zone=public --permanent --add-port=8111/tcp
+    firewall-cmd --reload
 
     echo "Function: InstallTeamCity complete"
 }
