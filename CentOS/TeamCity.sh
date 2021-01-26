@@ -5,14 +5,14 @@
 # Created base VM using:
 # 4 CPUs
 # 8 GB Ram
-# 25 GB hard drive - thin provisioned
+# 35 GB hard drive - thin provisioned
 #
 # Perform minimal installation
 # 
-# After installation, shutdown and added secondary HD
-# 70 GB - Thick provisioned
+# After installation, shutdown and add HD for DB storage
+# 50 GB - Thick provisioned
 #
-# Prepare secondary drive as followws:
+# Create partition on drive as followws:
 # fdisk /dev/sdb
 # n (to create a new partition)
 # p (to make primary partition)
@@ -31,22 +31,40 @@
 # /dev/sdb1 /var/lib/mysql ext4  defaults  1 1
 #
 # Reboot and confirm secondary drive is present using
-# df -h 
+# df -h
 #
-# Run the following commands
-# yum -y update
-# yum -y install open-vm-tools
-# yum -y install git wget unzip rsync java-1.8.0-openjdk-headless
+# After adding the DB drive, shutdown to add third drive for TC data (artifacts)
+# 50 GB - thin provisioned.  Create partition & format similar to above.
+#
+# Create mount point directory for TCData
+# mkdir /opt/TCData
+#
+# Edit /etc/fstab & add:
+# /dev/sdc1 /opt/TCData ext4  defaults  1 1
+# 
 #
 # Post installation DB setup
-# mysql_secure_installation
-# mysqladmin -u root -p version
-# Set root password = Cs..44, yes to all others
+# mysql_secure_installation   <-- Assign root password (Cs..44), then answer Y to all questions
+#
+# mysql -u root -p       <-- Create database & access account for TeamCity
+# create database cidb character set UTF8 collate utf8_bin;
+# create user admin identified by 'firmware';
+# grant all privileges on cidb.* to admin;
+# grant process on *.* to admin;
+# quit; 
 # 
-# mysqladmin -u root -p version
 
-# Edit /home/admin/.bashrc & add the following to the end of the file:
-# export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
+# After running script and entering all DB configurations as above, log in as admin
+# and start TeamCity service using:
+# /opt/TeamCity/bin/teamcity-server.sh start
+#
+# Open a web browser:  http://<URL>:8111
+# Follow the directions in the browser.
+
+
+##########################################################################
+##########################################################################
+##########################################################################
 
 # The TeamCity Server package is stored on internal server
 APPLICATION_SERVER_URL=http://10.1.1.26/Applications/TeamCity
@@ -64,6 +82,23 @@ function PerformUpdate
     yum -y update
 }
 # ------------------------------------------------------------------------
+
+InstallBasicApplications
+##########################################################################
+#
+function InstallBasicApplications
+{
+    yum -y install git wget unzip rsync java-1.8.0-openjdk-headless
+    
+    if grep -q JAVA_HOME /home/admin/.bashrc
+        echo "JAVA_HOME already included in admin/.bashrc (skipping)"
+    else 
+        # Edit /home/admin/.bashrc & add the following to the end of the file:
+        echo 'export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk' >> /home/admin/.bashrc
+    fi
+}
+# ------------------------------------------------------------------------
+
 
 ##########################################################################
 #
@@ -89,17 +124,17 @@ function InstallTeamCity
 
     pushd /opt
 
-    ls -al
-
     echo ${TC_PKG}
     tar xvf ${TC_PKG}
     rm -f ${TC_PKG}
-
-    chown -R admin:admin /opt/TeamCity
-
-    popd
     
-    # Open the necessary ports for web services
+    popd
+
+    # Allow TeamCity write permissions to its directories
+    chown -R admin:admin /opt/TeamCity
+    chown -R admin:admin /opt/TCData
+    
+    # Open the necessary ports for TeamCity web services
     firewall-cmd --zone=public --permanent --add-port=8111/tcp
     firewall-cmd --reload
 
@@ -119,6 +154,7 @@ function InstallTeamCity
 ##########################################################################
 
 PerformUpdate
+InstallBasicApplications
 InstallMariaDb
 InstallTeamCity
 
