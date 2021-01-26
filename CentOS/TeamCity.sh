@@ -83,14 +83,13 @@ function PerformUpdate
 }
 # ------------------------------------------------------------------------
 
-InstallBasicApplications
 ##########################################################################
 #
 function InstallBasicApplications
 {
     yum -y install git wget unzip rsync java-1.8.0-openjdk-headless
     
-    if grep -q JAVA_HOME /home/admin/.bashrc
+    if grep -q JAVA_HOME /home/admin/.bashrc; then
         echo "JAVA_HOME already included in admin/.bashrc (skipping)"
     else 
         # Edit /home/admin/.bashrc & add the following to the end of the file:
