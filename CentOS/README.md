@@ -1,65 +1,95 @@
 
-History log from VM docker
+# Install Script Support Information #
 
-1  clear
-2  ls -l
-3  dnf -y update
-4  yum -y update
-5  ls -l
-6  git
-7  yum -y install git
-8  shutdown -h now
-9  history
-10  yum -y remove docker*
-11  curl -fsSl https://get.docker.com/ | sh
-12  cat /etc/group
-13  usermod --append --groups docker developer
-14  cat /etc/group
-15  systenctl enable --now docker
-16  systemctl enable --now docker
-17  exit
-18  yum -y install tree
-19  exit
-20  yum -y install lynx
-21  lynx localhost:8080
-22  exit
-23  systemctl stop docker
-24  ls -l /etc/sysconfig/docker
-25  find /etc -name docker
-26  ls /etc/docker
-27  cat /etc/docker/key.json
-28  systemctl status docker
-29  systemctl start docker
-30  systemctl status docker
-31  clear
-32  exit
-33  ls -l /home
-34  su developer
-35  exit
-36  ls -al
-37  ip addr
-38  ls -l /home
-39  exit
-40  ls -l
-41  history
-42  systemctl status docker
-43  exit
-44  history
-45  exit
-46  uname -a
-47  ls -l /home
-48  exit
-49  ls -l
-50  systemctl status docker
-51  systemctl status kubernetes
-52  ip addr
-53  exit
-54  dnf -y install jq
-55  cat /etc/system-release
-56  yum -y install jp
-57  yum -y install jq
-58  ls -l
-59  pwd
-60  ls -l
-61  exit
-62  shutdown -h now
+## TeamCity Installation Notes for RHEL/CentOS 8 ##
+
+**Disk Configuration**
+
+Drive | Size (MB)      | Provisioning | Format | Mount Point
+----- | -------------- | ------------ | ------ | -----------
+sda   | 35             | Thin         | ext4   | NA
+sdb   | 50             | Thick, Eager | ext4   | /var/lib/mysql
+sdc   | 50             | Thin         | ext4   | /opt/TCData
+
+**Actions required before running the TeamCity.sh script**
+
+- Perform minimal install using only /dev/sda.
+- When base installation has finished, log in as root.
+
+**Prepare external drives**  
+Create partition on /dev/sdb & /dev/sdc using the following commands
+
+`fdisk /dev/sdb `  
+`n (to create a new partition)`  
+`p (to make primary partition)`  
+`1 (select partition 1)`  
+`Enter 1 to start format at cylinder 1, or enter first cylinder available`  
+`Enter (default to last cylinder to use all space)`  
+`w (write partition table & exit)`  
+
+**Format the drive partition created above**  
+`mkfs -t ext4 /dev/sdb1`
+
+### Repeat the steps above substituting /dev/sdc to format the third drive ###
+
+**Create the mount points in the file system**  
+`mkdir /var/lib/mysql`  
+`mkdir /opt/TCData`
+
+**Edit /etc/fstab, adding the following two lines:**  
+`/dev/sdb1 /var/lib/mysql ext4  defaults  1 1`  
+`/dev/sdc1 /opt/TcData ext4  defaults  1 1`
+ 
+**Reboot the system; log in as root.  Check for presence of all three drives using:**  
+`df -h`
+
+**After confirming that the external drives connected properly, install git:**  
+`dnf -y install git`
+
+**A VM snapshot may be desired at this point.  To run the TeamCity installation script:**  
+`mkdir repositories`  
+`cd repositories`  
+`git clone http://usstlgit03:7990/TBD/InstallScripts.git`  
+`cd InstallScripts`  
+`chmod +x TeamCity.sh`  
+`./TeamCity.sh`
+
+------------
+
+**After the script has run to completion, configure the database:**  
+`mysql_secure_installation   <-- Assign root password \(**and remember it**\), then answer Y to all questions  
+
+`mysql -u root -p       <-- Create database & access account for TeamCity`  
+`create database cidb character set UTF8 collate utf8_bin;`  
+`create user admin identified by 'firmware';`  
+`grant all privileges on cidb.* to admin;`  
+`grant process on *.* to admin;`  
+`quit;`  
+
+**After running script and entering all DB configurations as above, log in as admin
+and start TeamCity service using:**  
+`/opt/TeamCity/bin/teamcity-server.sh start`
+
+**Open a web browser, and point to:  http://<URL>:8111**  
+`Follow the directions in the browser.`
+
+------------
+
+## Containerization (Kubernetes/Docker - OpenShift/Podman) Server Installation Notes ##
+
+**Basic Configuration**
+
+CPUs  | Memory (GB) | Installation Type
+----- | ----------- | -----------------
+4     | 4           | Basic Workstation
+
+**Disk Configuration**
+
+Drive | Size (MB)      | Provisioning | Format | Mount Point
+----- | -------------- | ------------ | ------ | -----------
+sda   | 250            | Thin         | ext4   | NA
+
+**Related installation script: Kubernetes.sh**
+Has demonstrated to successfully install Podman, but needs a LOT of cleanup.  
+
+Kubernetes/OpenShift steps are TBD.
