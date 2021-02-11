@@ -118,15 +118,29 @@ function InstallRedmine
     export REDMINE_PATH=/home/developer/${REDMINE_SRC}
     cd ${REDMINE_PATH}
     cp config/database.yml.example config/database.yml
-    chown developer:developer config/database.yml
-
-    rm -f ${REDMINE_PKG}
+    
+    chown -R developer:developer ${REDMINE_PATH}
+    
+    # Remove all instances of package files
+    rm -f *.tar.gz*
 
     popd
 }
 # ------------------------------------------------------------------------
 
+##########################################################################
+function InstallGemsRepository
+{
 
+
+    cd $REDMINE
+    gem install bundler
+    bundle install --without development test
+    bundle exec rake generate_secret_token
+    RAILS_ENV=production REDMINE_LANG=en bundle exec rake redmine:load_default_data
+ 
+}
+# ------------------------------------------------------------------------
 
 # ====================================================================================
 # ====================================================================================
@@ -150,6 +164,7 @@ InstallBasicApplications
 # InstallPhp # May not be needed
 
 # InstallRedmine
+InstallGemsRepository
 
 
 
