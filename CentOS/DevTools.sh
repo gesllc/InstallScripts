@@ -3,20 +3,20 @@
 # Definitions to define URLs for downloading Applications
 APPLICATION_SERVER_URL=http://10.1.1.26/Applications
 
-PYTHON_VER=3.8.1
+PYTHON_VER=3.8.8
 PYTHON_SRC=Python-${PYTHON_VER}
 PYTHON_PKG=${PYTHON_SRC}.tgz
-PYTHON_URL=${APPLICATION_URL}/Python/${PYTHON_VER}/${PYTHON_PKG}
+PYTHON_URL=https://www.python.org/downloads/source/${PYTHON_PKG}
 
-SONAR_VER=3.0.1.733
-SONAR_SCANNER=sonar-scanner-cli-${SONAR_VER}-linux
-SONAR_SCANNER_ZIP=${SONAR_SCANNER}.zip
-SONAR_SCANNER_URL=R{PACKAGE_URL}/Packages/SonarQube/${SONAR_SCANNER_ZIP}
-SONAR_SCANNER_DIR=sonar-scanner-${SONAR_VER}-linux
+#SONAR_VER=3.0.1.733
+#SONAR_SCANNER=sonar-scanner-cli-${SONAR_VER}-linux
+#SONAR_SCANNER_ZIP=${SONAR_SCANNER}.zip
+#SONAR_SCANNER_URL=R{PACKAGE_URL}/Packages/SonarQube/${SONAR_SCANNER_ZIP}
+#SONAR_SCANNER_DIR=sonar-scanner-${SONAR_VER}-linux
 
-SLICK_EDIT_VER=2400020
-SLICK_EDIT=se_${SLICK_EDIT_VER}_linux64.tar.gz
-SLICK_EDIT_URL=${APPLICATION_URL}/SlickEdit/Linux/${SLICK_EDIT}
+#SLICK_EDIT_VER=2400020
+#SLICK_EDIT=se_${SLICK_EDIT_VER}_linux64.tar.gz
+#SLICK_EDIT_URL=${APPLICATION_URL}/SlickEdit/Linux/${SLICK_EDIT}
 
 DOXYGEN_VER=1.8.18
 DOXYGEN=doxygen-${DOXYGEN_VER}.src.tar.gz
@@ -78,6 +78,7 @@ function InstallDevelopmentApplications
 {
     echo "Function: InstallDevelopmentApplications"
     dnf -y install subversion
+    dnf -y install git
     dnf -y install gedit
 
     # Install development & test support items
@@ -306,16 +307,17 @@ fi
 # See: build-aux/gen-lists-of-programs.sh
 function InstallMingw32
 {
-dnf -y install mingw32-gcc mingw32-libxml2 mingw32-minizip mingw32-libwebp 
-dnf -y install mingw32-pdcurses mingw32-gcc-c++
+    # dnf -y install mingw32-gcc mingw32-libxml2 mingw32-minizip mingw32-libwebp 
+    # dnf -y install mingw32-pdcurses mingw32-gcc-c++
+    dnf -y install ming32-*
 }
 # ------------------------------------------------------------------------
 
 ##########################################################################
 # Add static ip addresses to /etc/hosts to allow hostnames instead of only IPs
-function AddLocalHostNames
+function UpdateEtcHosts
 {
-echo "Function: AddLocalHostNames"
+echo "Function: UpdateEtcHosts"
 
 if grep -q esximgmt /etc/hosts; then
     echo "esximgmt entry already exists in /etc/hosts (skipping)"
@@ -385,56 +387,6 @@ fi
 # ------------------------------------------------------------------------
 
 ##########################################################################
-# Add host names needed in BMX
-function AddBioMerieuxHostNames
-{
-if grep -q usstlsvn02 /etc/hosts; then
-    echo "usstlsvn02 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstlsvn02 to /etc/hosts"
-    echo '10.17.20.6     usstlsvn02  usstlsvn02.us.noam.biomerieux.net # Main Subversion Server' >> /etc/hosts
-fi
-
-if grep -q usstlbas02 /etc/hosts; then
-    echo "usstlbas02 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstlbas02 to /etc/hosts"
-    echo '10.17.20.10    usstlbas02  usstlbas02.us.noam.biomerieux.net # TeamCity Server' >> /etc/hosts
-fi
-
-if grep -q usstllic01 /etc/hosts; then
-    echo "usstllic01 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstllic01 to /etc/hosts"
-    echo '10.17.20.13    usstllic01  usstllic01.us.noam.biomerieux.net # License Server (W7)' >> /etc/hosts
-fi
-
-if grep -q usstlgit03 /etc/hosts; then
-    echo "usstlgit03 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstlgit03 to /etc/hosts"
-    echo '10.17.20.23    usstlgit03  usstlgit03.us.noam.biomerieux.net # Production Git Server (Atlassian Bitbucket on RHEL 7)' >> /etc/hosts
-fi
-
-if grep -q sonarqube /etc/hosts; then
-    echo "sonarqube entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding sonarqube to /etc/hosts"
-    echo '10.17.20.29    sonarqube   sonarqube.us.noam.biomerieux.net # SonarQube Server' >> /etc/hosts
-fi
-
-if grep -q usstlweb02 /etc/hosts; then
-    echo "usstlweb02 entry already exists in /etc/hosts (skipping)"
-else
-    echo "Adding usstlweb02 to /etc/hosts"
-    echo '10.17.20.62    usstlweb02   usstlweb02.us.noam.biomerieux.net # Engineering Web Server' >> /etc/hosts
-fi
-}
-
-# Static IP updates finished
-# ------------------------------------------------------------------------
-
-##########################################################################
 # Install Sqlite Studio 
 # https://github.com/pawelsalawa/sqlitestudio/wiki/Instructions_for_compilation_under_Linux#what-you-need 
 # https://jdhao.github.io/2017/09/04/install-gcc-newer-version-on-centos/
@@ -478,9 +430,9 @@ InstallDevelopmentApplications
 InstallPython
 
 # Note that installing EPEL seems to work best BEFORE updating
-InstallEpelRepository      # Enables the EPEL repository 
+# InstallEpelRepository      # Enables the EPEL repository 
 # InstallDKMS                # REQUIRES EPEL Repository Installs DKMS (for virtualization support)
-InstallFilezilla           # REQUIRES EPEL Repository Installs FileZilla
+# InstallFilezilla           # REQUIRES EPEL Repository Installs FileZilla
 
 # DisableSELinux
 
@@ -492,7 +444,7 @@ InstallPythonExtensions
 # InstallGoogleChrome
 InstallMingw32
 # InstallSqliteStudio
-PrepareSlickEdit
-AddLocalHostNames
+# PrepareSlickEdit
+UpdateEtcHosts
 # AddBioMerieuxHostNames
 
