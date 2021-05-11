@@ -10,7 +10,7 @@ To install the GAs, I used these steps (borrowed from various places on the web)
 - Log in as root using `su -` and enter the root password assigned during install.  
 - `apt install -y build-essential module-assistant`  
 - `m-a prepare`
-- apt install -y linux-headers-$(uname -r)`
+- `apt install -y linux-headers-$(uname -r)`
 - Reboot
 - Log in as root again  
 - Using VBox menus: Devices -> Insert Guest Additions CD Image.  A Run dialog will open; ignore it.  

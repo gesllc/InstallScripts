@@ -53,13 +53,13 @@
         <Folder
             Name="Source Files"
             Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.c++;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.scala;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl;*.d;*.m;*.mm;*.go;*.groovy;*.gsh"
-            GUID="{71CF80F5-33F9-4FE7-831D-8EA83AE284DC}">
-            <F N="LM19_WorkstationInstall.sh"/>
-        </Folder>
+            GUID="{71CF80F5-33F9-4FE7-831D-8EA83AE284DC}"></Folder>
         <Folder
             Name="Header Files"
             Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.h++;*.inc;*.sh;*.cpy;*.if"
-            GUID="{ECC9D25E-FC25-4A70-821E-FCACBF514C9C}"/>
+            GUID="{ECC9D25E-FC25-4A70-821E-FCACBF514C9C}">
+            <F N="WorkstationInstall.sh"/>
+        </Folder>
         <Folder
             Name="Resource Files"
             Filters="*.ico;*.cur;*.dlg"
