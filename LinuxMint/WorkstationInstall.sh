@@ -22,7 +22,8 @@ APPLICATION_SERVER_URL=http://10.1.1.26/Applications
 # PY34_SOURCE=${APPLICATION_SERVER_URL}/Python/3.4.4/Python-3.4.4.tgz
 
 # SlickEdit definitions
-SE_TAR=se_23000102_linux64.tar.gz
+SE_VERSION=25000100
+SE_TAR=se_${SE_VERSION}_linux64.tar.gz
 SE_KEY=SE_VLX818071_2300_Gomez.lic
 SLICKEDIT_INSTALLER=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_TAR}
 SLICKEDIT_KEY=${APPLICATION_SERVER_URL}/SlickEdit/Linux/${SE_KEY}
@@ -198,9 +199,9 @@ fi
 
 # NOTE: After the script has run, perform the following steps to complete
 #       SlickEdit installation
-# cd se_23000102_linux64/
+# cd se_${SE_VERSION}_linux64/
 # sudo ./vsinst
-# /opt/slickedit-pro2018/bin/vs &
+# /opt/slickedit-pro2020/bin/vs &
 # sudo mv SE_VLX818071_2300_Gomez.lic /opt/slickedit-pro2018/bin/slickedit.lic
 
 echo "Function: FetchAndPrepareSlickEdit completed"
