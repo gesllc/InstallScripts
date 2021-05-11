@@ -63,9 +63,7 @@
         <Folder
             Name="Resource Files"
             Filters="*.ico;*.cur;*.dlg"
-            GUID="{4284739D-7119-4DE0-9F97-585116B4901F}">
-            <F N="LinuxMintInstallNotes.md"/>
-        </Folder>
+            GUID="{4284739D-7119-4DE0-9F97-585116B4901F}"></Folder>
         <Folder
             Name="Bitmaps"
             Filters="*.bmp"
@@ -73,6 +71,8 @@
         <Folder
             Name="Other Files"
             Filters=""
-            GUID="{34821CBC-570F-4034-BC8F-210A1BFACF8A}"/>
+            GUID="{34821CBC-570F-4034-BC8F-210A1BFACF8A}">
+            <F N="README.md"/>
+        </Folder>
     </Files>
 </Project>

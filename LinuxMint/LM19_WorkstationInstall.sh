@@ -95,9 +95,22 @@ sudo apt install -y htop
 sudo apt install -y ddd
 sudo apt install -y filezilla
 sudo apt install -y gimp
-sudo apt install -y libaio1   # <- Needed for VMware Player & VMRC
 
-sudo apt install -y sqlitebrowser
+# sudo apt install -y libaio1   # <- Needed for VMware Player & VMRC
+
+# sudo apt install -y sqlitebrowser
+
+# curl https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit
+
+echo "Function: InstallDevelopmentTools completed"
+}
+# -------------------------------------------------------------------
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+function InstallGoogleChrome
+{
+echo "Function: InstallGoogleChrome"
 
 # And the google chrome browser
 cd ~/Downloads
@@ -106,9 +119,7 @@ wget ${CHROME_PACKAGE} --directory-prefix ~/Downloads
 sudo dpkg -i ~/Downloads/${CHROME}
 cd
 
-# curl https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit
-
-echo "Function: InstallDevelopmentTools completed"
+echo "Function: InstallGoogleChrome completed"
 }
 # -------------------------------------------------------------------
 
@@ -171,10 +182,10 @@ function FetchAndPrepareSlickEdit
 {
 echo "Function: FetchAndPrepareSlickEdit"
 
-if [ ! -d "/opt/slickedit-pro2018" ]; then
+if [ ! -d "/opt/slickedit-pro2020" ]; then
     echo "Downloading & extracting SlickEdit package"
     sudo wget ${SLICKEDIT_INSTALLER} --directory-prefix /opt
-    sudo wget ${SLICKEDIT_KEY} --directory-prefix /opt
+    # sudo wget ${SLICKEDIT_KEY} --directory-prefix /opt
     cd /opt
     sudo tar -xvf ${SE_TAR}
 
@@ -336,13 +347,14 @@ uname -a
 # PerformUpgrade
 
 InstallDevelopmentTools
-InstallAudioApplications
-InstallMusicApplications
-SetGitUserPreferences
+#InstallGoogleChrome
+#InstallAudioApplications
+#InstallMusicApplications
+#SetGitUserPreferences
 
 FetchAndPrepareSlickEdit
-UpdateEtcHostsEntries
-FetchAndInstallVirtualizationPackages
+#UpdateEtcHostsEntries
+#FetchAndInstallVirtualizationPackages
 
 echo "Script execution complete"
 
