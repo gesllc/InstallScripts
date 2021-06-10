@@ -136,6 +136,7 @@
             <F N="Kubernetes.sh"/>
             <F N="Lamp.sh"/>
             <F N="MariaDB.sh"/>
+            <F N="OpenShift.sh"/>
             <F N="Redmine.sh"/>
             <F N="SqueezeBox.sh"/>
             <F N="tc-agent.sh"/>

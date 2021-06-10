@@ -1,8 +1,24 @@
 
 # Copied from CentOS 7 area
-# Modifying to work with CentOS 8
+# Modifying to work with CentOS 8 & RHEL 8
+
+# Red Hat Documentation
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/building_running_and_managing_containers/index
 
 # From: https://myopswork.com/how-to-install-kubernetes-k8-in-rhel-or-centos-in-just-7-steps-2b78331174a5
+
+
+# Prerequisite:
+# 1.) Administrator account 'admin' must exist prior to running this script (create during initial installation)
+# 2.) Register system using:      subscription-manager register
+# 3.) Auto subscribe using:       subscription-manager --auto
+# 4.) Subscribe by PoolId:        subscription-manager --pool PoolID << ????
+#     List available Pool Ids     subscription-manager list --available
+#     Remove subscriptions        subscription-manager remove --all
+#     Unregister from portal      subscription-manager unregister
+#     Cleanup                     subscription-manager clean
+#     Search Repos                subscription-manager repos --list
+
 # ====================================================================================
 function PerformUpdate
 {
@@ -22,18 +38,8 @@ function InstallApplications
 #      The install steps here are from:
 #      https://podman.io/getting-started/installation
 #
-#      Deprecated - https://www.tecmint.com/create-local-yum-repository-on-centos-8/
-#      https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/building_running_and_managing_containers/starting-with-containers_building-running-and-managing-containers
 function InstallDocker
 {
-    # CentOS 8
-    #sudo dnf -y module disable container-tools
-    #sudo dnf -y install 'dnf-command(copr)'
-    #sudo dnf -y copr enable rhcontainerbot/container-selinux
-    #sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo \
-    #    https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
-
-    #sudo dnf -y install podman
     
     # The following is from the Red Hat reference noted above:
     yum module install -y container-tools
@@ -87,5 +93,8 @@ systemctl stop packagekit
 PerformUpdate
 InstallApplications
 InstallDocker
+
+
+
 # InstallKubernetes
 
