@@ -53,8 +53,16 @@ function InstallDocker
 }
 
 # ====================================================================================
+
+#vi /etc/selinux/config
+# SELINUX=permissive ##Change if it is enforceingagv-master$ 
+    
+# Also, after running script, permenantly disable swap by commenting swap line in /etc/fstab    
+
 function InstallKubernetes
 {
+
+# Create kubernetes.repo 
 # NOTE: here-document cannot start with spaces or tabs!    
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
@@ -69,12 +77,20 @@ EOF
 
     setenforce 0
     
-    #vi /etc/selinux/config
-    # SELINUX=permissive ##Change if it is enforceingagv-master$ 
-    
-    yum -y install kubelet kubeadm kubectl
+    dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
     
     systemctl enable --now kubelet
+
+    # Add the following lines to /etc/sysctl.d/k8s.conf 
+    echo 'net.bridge.bridge-nf-call-ip6tables = 1' >> /etc/sysctl.d/k8s.conf
+    echo 'net.bridge.bridge-nf-call-iptables = 1' >> /etc/sysctl.d/k8s.conf
+
+    # Reload configuration
+    sysctl --system 
+
+    # Disable swap
+    swapoff -a
+
 }
 
 # ====================================================================================
@@ -94,7 +110,5 @@ PerformUpdate
 InstallApplications
 InstallDocker
 
-
-
-# InstallKubernetes
+InstallKubernetes
 
