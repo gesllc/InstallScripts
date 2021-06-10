@@ -46,8 +46,8 @@ function InstallDocker
     yum install -y podman-docker
     
     # Set up rootless container access
-    yum install slirp4netns podman -y
-    echo "user.max_user_namespaces=28633" > /etc/sysctl.d/userns.conf
+    yum install -y slirp4netns podman
+    echo "user.max_user_namespaces=28644" > /etc/sysctl.d/userns.conf
     sysctl -p /etc/sysctl.d/userns.conf
         
 }
