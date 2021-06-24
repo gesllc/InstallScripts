@@ -1,13 +1,11 @@
 
-# Copied from CentOS 7 area
-# Modifying to work with CentOS 8 & RHEL 8
-
 # Red Hat Documentation
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/building_running_and_managing_containers/index
 
 # From: https://myopswork.com/how-to-install-kubernetes-k8-in-rhel-or-centos-in-just-7-steps-2b78331174a5
 
 
+# ====================================================================================
 # Prerequisite:
 # 1.) Administrator account 'admin' must exist prior to running this script (create during initial installation)
 # 2.) Register system using:      subscription-manager register
@@ -20,6 +18,31 @@
 #     Search Repos                subscription-manager repos --list
 
 # ====================================================================================
+# Minikube setup
+# Add the following to SUDO permissions (using visudo)
+#
+## Allow admin to access podman without passwords
+# admin   ALL=(ALL) NOPASSWD: /usr/bin/podman
+#
+# Then from non-root (admin) account run      minikube start
+#
+# After the above completes, access cluster using      kubectl get po -A
+#
+# 
+
+# ====================================================================================
+# Adding Lynx on RHEL
+# subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
+# dnf install -y lynx
+# 
+# For CentOS
+# dnf config-manager --set-enabled PowerTools
+# dnf install -y lynx
+#
+
+# ====================================================================================
+# ====================================================================================
+# ====================================================================================
 function PerformUpdate
 {
     yum -y update
@@ -30,7 +53,7 @@ function InstallApplications
 {
     yum -y install git
     yum -y install tree
-    yum -y install lynx
+    # yum -y install lynx <-- Not available in default repositories
 }
 
 # ====================================================================================
@@ -120,5 +143,5 @@ InstallApplications
 InstallDocker
 
 InstallKubernetes
-InstallMiniKube
+# InstallMiniKube
 
